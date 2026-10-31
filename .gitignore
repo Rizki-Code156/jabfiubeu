@@ -1,0 +1,25 @@
+# Environment Variables (jangan di-push ke repo!)
+.env
+
+# Dependency directories
+backend/vendor/
+
+# IDE dan Editor Config
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Logs dan Cache
+cli-config.php
+.phpunit.result.cache
+.phpunit.cache/
+logs/
+*.log
+
+# OS Files
+.DS_Store
+Thumbs.db

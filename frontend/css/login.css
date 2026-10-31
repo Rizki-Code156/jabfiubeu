@@ -1,0 +1,377 @@
+:root {
+  --primary: #001b7d;
+  --bg-color: #ffffff;
+  --input-bg: #d9d9d9;
+  --font-title: "Instrument Serif";
+  --font-body: "Inter";
+  --error-bg: #e33629;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #f4f6f9;
+  font-family: var(--font-body);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* CONTAINER KARTU UTAMA (DENGAN GARIS TEPI SAMA SEPERTI REGISTER) */
+.auth-container {
+  width: 100%;
+  max-width: 450px;
+  min-height: 874px;
+  background: var(--bg-color);
+  border: 1px solid #001b7d; /* GARIS TEPI SAMA SEPERTI REGISTER */
+  border-radius: 40px; /* RADIUS SAMA SEPERTI REGISTER */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+/* HEADER SESUAI FIGMA (Height: 215px, Radius: 40px 40px 0 0) */
+.auth-header {
+  width: 100%;
+  height: 215px;
+  background: #001b7d;
+  color: #ffffff;
+  padding: 30px 20px 20px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-top-left-radius: 39px;
+  border-top-right-radius: 39px;
+}
+
+/* TOMBOL KEMBALI */
+.back-btn {
+  position: absolute;
+  left: 24px; 
+  top: 50%;
+  transform: translateY(-140%); 
+  width: 38px;
+  height: 38px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.back-btn svg {
+  width: 28px;
+  height: 28px;
+  fill: var(--primary);
+}
+
+/* LOGO MANGAN YUKKK (Ukuran Font Sesuai Figma) */
+.auth-brand {
+  margin: 0;
+  font-family: var(--font-title), serif;
+  font-weight: 400;
+  font-size: 48px; /* Font 'MANGAN' Figma */
+  line-height: 1.1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #ffffff;
+}
+
+.auth-brand span:last-child {
+  font-size: 40px; /* Font 'YUKKK' Figma */
+  line-height: 1;
+  margin-top: 2px;
+}
+
+/* SUBTITLE KULINER KHAS CIREBON */
+.auth-subtitle {
+  margin-top: 10px;
+  margin-bottom: 0;
+  font-family: var(--font-body), sans-serif;
+  font-size: 16px; /* Font Subtitle Figma */
+  line-height: 19px;
+  color: #ffffff;
+  opacity: 1;
+}
+
+/* FORM ISI */
+.auth-form {
+  width: 100%;
+  padding: 28px 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex-grow: 1;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--primary);
+}
+
+.input-wrapper {
+  display: flex;
+  align-items: center;
+  background: var(--input-bg);
+  border-radius: 10px;
+  padding: 10px 14px;
+  gap: 10px;
+  border: 1px solid transparent;
+  transition: border-color 0.2s ease;
+  position: relative;
+}
+
+.input-wrapper.error {
+  border: 1px solid var(--error-bg);
+}
+
+.input-icon {
+  font-size: 20px;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.key-icon {
+  transform: rotate(-45deg);
+}
+
+.input-wrapper input {
+  border: none;
+  outline: none;
+  width: 100%;
+  min-width: 0;
+  font-family: var(--font-body);
+  font-size: 16px;
+  color: var(--primary);
+  background: transparent !important;
+  padding-right: 30px;
+}
+
+.input-wrapper input::placeholder {
+  color: var(--primary);
+  opacity: 1;
+}
+
+.input-wrapper input:-webkit-autofill,
+.input-wrapper input:-webkit-autofill:hover,
+.input-wrapper input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 30px var(--input-bg) inset !important;
+  -webkit-text-fill-color: #333 !important;
+}
+
+input::-ms-reveal,
+input::-ms-clear {
+  display: none;
+}
+
+.toggle-password {
+  font-size: 20px;
+  color: #555;
+  cursor: pointer;
+  position: absolute;
+  right: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+
+/* Pesan validasi merah */
+#errorBanner {
+  background-color: var(--error-bg);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.4;
+  text-align: center;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 8px 18px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+#errorBanner[hidden] {
+  display: none !important;
+}
+
+.btn-submit {
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 28px;
+  font-family: var(--font-body);
+  font-size: 20px;
+  font-weight: 400;
+  cursor: pointer;
+  align-self: center;
+  margin-top: 6px;
+  min-width: 120px;
+}
+
+.btn-submit:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.divider {
+  text-align: center;
+  font-size: 16px;
+  color: var(--primary);
+  margin: 2px 0;
+}
+
+.btn-google {
+  background: var(--input-bg);
+  border: none;
+  border-radius: 10px;
+  padding: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--primary);
+  cursor: pointer;
+}
+
+.google-icon {
+  width: 25px;
+  height: 25px;
+  flex-shrink: 0;
+}
+
+.auth-footer {
+  text-align: center;
+  color: var(--primary);
+  margin-top: 16px !important;
+  padding-top: 0 !important;
+  padding-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.auth-footer p {
+  margin: 0;
+  font-size: 16px;
+  color: var(--primary);
+}
+
+.auth-footer a {
+  color: var(--primary);
+  font-family: var(--font-title);
+  font-size: 20px;
+  text-decoration: underline;
+}
+
+/* Modal Popup Overlay (BACKGROUND TERANG & TEKS DIGEDEIN) */
+.modal-overlay {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background: rgba(217, 217, 217, 0.7) !important; /* Latar belakang abu-abu transparan */
+  display: none;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 99999 !important;
+}
+
+.modal-card {
+  background: #ffffff;
+  width: 85%;
+  max-width: 320px;
+  padding: 28px 24px;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* TEKS DI DALAM POPUP CARD DIPERBESAR KE 20PX */
+.modal-message,
+.modal-text {
+  font-family: var(--font-body), sans-serif !important;
+  font-size: 20px !important; /* Ukuran font diperbesar jadi 20px */
+  font-weight: 500 !important;
+  color: #001b7d !important;
+  line-height: 1.4 !important;
+  text-align: center !important;
+  margin: 14px 0 !important;
+}
+
+.modal-action-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 18px;
+}
+
+.modal-link-action {
+  color: #001b7d;
+  font-weight: 500;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+/* RESPONSIVE DESKTOP (AKSES DARI LAPTOP/DESKTOP) */
+@media (min-width: 768px) {
+  body {
+    background-color: #f4f6f9;
+    padding: 40px 20px;
+  }
+
+  .auth-container {
+    width: 450px;
+    max-width: 450px;
+    min-height: 874px;
+    border: 1px solid #001b7d; /* BORDER DITAMBAHKAN */
+    border-radius: 40px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-container {
+    border-radius: 0;
+    border: none;
+    min-height: 100vh;
+  }
+
+  .auth-header {
+    border-radius: 0;
+  }
+
+  .auth-form {
+    padding: 24px 20px 20px;
+  }
+}

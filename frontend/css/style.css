@@ -1,0 +1,690 @@
+:root {
+  --primary: #001b7d;
+  --border: #d9dce5;
+  --text: #34343a;
+  --muted: #6c6c73;
+  --placeholder: #dedede;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #fffffff0;
+  color: var(--text);
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+}
+
+button,
+input {
+  font-family: "Inter", sans-serif;
+}
+
+/* NAVBAR */
+.navbar {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  z-index: 9999 !important;
+  min-height: 84px;
+  background: var(--primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px clamp(18px, 5vw, 54px);
+  gap: 18px;
+}
+
+.brand {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  color: white;
+  text-decoration: none;
+  font-family: "Instrument Serif", serif;
+  font-size: 26px;
+  font-weight: 400;
+  line-height: 1.05;
+}
+
+.brand span:last-child {
+  padding-left: 9px;
+  font-size: 23px;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: clamp(14px, 3vw, 30px);
+}
+
+.nav-dropdown-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.nav-icon-btn {
+  border: none;
+  background: transparent;
+  color: white;
+  cursor: pointer;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  z-index: 2;
+}
+
+.nav-dropdown-horizontal {
+  display: none;
+  position: absolute;
+  right: calc(100% + 8px);
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(217, 217, 217, 0.1);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  padding: 4px 10px;
+  border-radius: 30px;
+  gap: 12px;
+  align-items: center;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.nav-dropdown-horizontal.show {
+  display: flex !important;
+  opacity: 1 !important;
+  animation: slideLeft 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nav-icon-link {
+  color: white !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  text-decoration: none;
+}
+
+@keyframes slideLeft {
+  from {
+    opacity: 0;
+    transform: translate(10px, -50%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(0, -50%);
+  }
+}
+
+.nav-dropdown-horizontal iconify-icon,
+.nav-icon-btn iconify-icon {
+  color: white !important;
+  display: inline-block !important;
+  pointer-events: none;
+}
+
+.nav-dropdown-horizontal iconify-icon {
+  font-size: 22px !important;
+}
+
+.nav-icon-btn iconify-icon {
+  font-size: 24px !important;
+}
+
+.nav-icon-link img {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+
+/* CONTAINER HALAMAN DESKTOP */
+.page-container {
+  width: 100% !important;
+  max-width: 1340px !important;
+  min-height: 100vh !important;
+  margin: 0 auto !important;
+  padding: 24px 32px 50px !important;
+  padding-top: 100px !important;
+  box-sizing: border-box !important;
+  background: #ffffff !important;
+  border: none !important;
+  border-radius: 0 !important;
+  position: relative !important;
+}
+
+.page-caption {
+  text-align: center;
+  font-size: 20px;
+  font-family: "Inter";
+  color: #000000;
+  font-weight: 400;
+  margin: 0 auto 14px;
+}
+
+/* Map / Banner Peta */
+.map-banner,
+#map {
+  width: 100% !important;
+  max-width: 1340px !important;
+  height: 200px !important;
+  border-radius: 10px !important;
+  margin: 0 auto 16px auto !important;
+  display: block !important;
+  overflow: hidden !important;
+}
+
+/* Kotak Pencarian */
+.search-section {
+  width: 100% !important;
+  max-width: 1340px !important;
+  margin: 0 auto 16px auto !important;
+}
+
+.search-box {
+  width: 100% !important;
+  height: 48px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  border: 1px solid #d4d4d4 !important;
+  border-radius: 30px !important;
+  background: white !important;
+  padding: 0 24px !important;
+  box-sizing: border-box !important;
+}
+
+.search-box iconify-icon.search-icon {
+  font-size: 22px !important;
+  color: #000000 !important;
+}
+
+.search-box input {
+  width: 100% !important;
+  border: 0 !important;
+  outline: none !important;
+  background: transparent !important;
+  color: #000000 !important;
+  font-family: "Inter" !important;
+  font-size: 18px !important;
+}
+
+.search-box input[type="search"]::-webkit-search-cancel-button,
+.search-box input[type="search"]::-webkit-search-decoration,
+.search-box input[type="search"]::-webkit-search-results-button,
+.search-box input[type="search"]::-webkit-search-results-decoration {
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  display: none !important;
+}
+
+.search-box input::placeholder {
+  color: #000000 !important;
+}
+
+/* CONTAINER / PEMBUNGKUS KATEGORI */
+.category-section {
+  width: 100% !important;
+  max-width: 1340px !important;
+  margin: 0 auto 0 auto !important;
+  padding: 0 !important;
+  overflow-x: auto !important;
+  scrollbar-width: none !important;
+}
+
+/* LIST TOMBOL KATEGORI */
+.kategori-container,
+.category-list {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  padding: 4px 8px 10px 8px !important; /* Padding bawah 10px memberi ruang bayangan hover tombol */
+  margin-bottom: 0 !important;          /* Hapus margin bawah agar tidak renggang */
+  overflow-x: auto !important;
+  overflow-y: visible !important;
+}
+
+.food-grid,
+.card-grid {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+/* TOMBOL KATEGORI UTAMA */
+button.category-btn,
+button.btn-kategori,
+.category-btn,
+.btn-kategori {
+  width: 150px !important;
+  height: 48px !important;
+  min-width: 150px !important;
+  max-width: 150px !important;
+
+  /* Radius dibikin lebih melengkung/bulat */
+  -webkit-border-radius: 14px !important;
+  -moz-border-radius: 14px !important;
+  border-radius: 5px !important;
+
+  background-color: #001b7d !important;
+  color: #ffffff !important;
+  border: none !important;
+  outline: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+
+  margin: 0 !important;
+  box-shadow: none !important;
+  appearance: none !important;
+  -webkit-appearance: none !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+
+  font-size: 18px !important;
+  font-weight: 400 !important;
+  cursor: pointer !important;
+  opacity: 1 !important;
+  box-sizing: border-box !important;
+  transition: box-shadow 0.2s ease !important;
+}
+
+/* SAAT DI-HOVER: HANYA DI BAWAH (SAMPINGNYA DIPOTONG NEGATIF SPREAD) */
+button.category-btn:hover,
+button.btn-kategori:hover {
+  background-color: #001b7d !important;
+  color: #ffffff !important;
+  outline: none !important;
+  /* 0px X, 8px Y, 12px Blur, -4px Spread (memotong bayangan samping) */
+  box-shadow: 0px 8px 12px -4px rgba(0, 0, 0, 0.45) !important;
+}
+
+/* SAAT DIKLIK, FOKUS, ATAU AKTIF */
+button.category-btn:focus,
+button.btn-kategori:focus,
+button.category-btn:active,
+button.btn-kategori:active,
+button.category-btn.active,
+button.btn-kategori.active {
+  background-color: #001b7d !important;
+  color: #ffffff !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: 0px 8px 14px -4px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* MAP BANNER */
+.map-banner,
+#map {
+  width: 100%;
+  height: 320px;
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+/* GRID UTAMA FOOD CARD */
+.food-grid,
+.card-grid {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 20px !important;
+  justify-content: flex-start !important;
+  width: 100% !important;
+  max-width: 1340px !important;
+  margin: 0 auto !important;
+}
+
+.food-card {
+  width: calc(25% - 15px) !important;
+  min-width: 250px !important;
+  max-width: 320px !important;
+  height: 360px !important;
+  padding: 12px !important;
+  background: #ffffff !important;
+  border: 1px solid #d4d4d4 !important;
+  box-shadow: 0px 4px 4px #001b7d !important;
+  border-radius: 5px !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  flex-direction: column !important;
+  margin: 0 !important; /* UBAH DARI '0 auto' MENJADI '0' AGAR TIDAK RENGGANG */
+  border-bottom: 3px solid var(--primary);
+}
+
+.food-photo {
+  width: 100% !important;
+  height: 190px !important;
+  object-fit: cover !important;
+  border-radius: 5px !important;
+  margin: 0 auto 8px auto !important;
+  display: block !important;
+}
+
+.food-name {
+  font-family: "Inter" !important;
+  font-weight: 400 !important;
+  font-size: 15px !important;
+  line-height: 18px !important;
+  text-align: left !important;
+  color: #000000 !important;
+  margin: 0 0 6px 0 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.food-location {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 4px !important;
+  color: #000000 !important;
+  font-size: 12px !important;
+  line-height: 15px !important;
+  margin-bottom: 8px !important;
+}
+
+.food-location iconify-icon {
+  font-size: 25px !important;
+  color: #938f99 !important;
+  flex-shrink: 0 !important;
+}
+
+.food-meta {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  margin-top: auto !important;
+  font-family: "Inter" !important;
+  font-size: 18px !important;
+  font-weight: 400 !important;
+  color: #000000 !important;
+}
+
+/* CONTAINER & PEMBUNGKUS POPUP GOOGLE MAPS */
+.gm-style-iw-c {
+  padding: 12px 12px 10px 12px !important;
+  border-radius: 12px !important;
+  max-width: 220px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* MENYEMBUNYIKAN SCROLLBAR OTOMATIS */
+.gm-style-iw-d {
+  overflow: hidden !important;
+  max-height: none !important;
+  padding: 0 !important;
+}
+
+/* KARTU DALAM POPUP */
+.map-popup-card {
+  width: 100% !important;
+  max-width: 196px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+  font-family: "Inter", sans-serif !important;
+}
+
+/* UKURAN FOTO KULINER (DIBERIKAN KETINGGIAN LEBIH BESAR) */
+.map-popup-img {
+  width: 100% !important;
+  height: 100px !important; /* Diperbesar dari 80px ke 100px agar foto lebih jelas */
+  object-fit: cover !important;
+  border-radius: 8px !important;
+  margin-bottom: 8px !important;
+  display: block !important;
+}
+
+/* POSISI KONTROL TOMBOL SILANG (X) TEAPAT DI POJOK KANAN ATAS */
+button.gm-ui-hover-effect {
+  position: absolute !important;
+  top: 4px !important;
+  right: 4px !important;
+  width: 22px !important;
+  height: 22px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
+  border-radius: 50% !important;
+  z-index: 10 !important;
+}
+
+button.gm-ui-hover-effect span {
+  margin: 0 auto !important;
+  width: 12px !important;
+  height: 12px !important;
+}
+
+/* RESPONSIVE TABLET */
+@media (max-width: 768px) {
+  .page-container {
+    max-width: 100%;
+    padding: 16px;
+    padding-top: 96px !important;
+  }
+
+  .map-banner,
+  #map {
+    height: 240px;
+    border-radius: 14px;
+    margin-bottom: 16px;
+  }
+
+  .food-grid,
+  .card-grid,
+  .kuliner-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 16px !important;
+  }
+
+  .food-card {
+    max-width: none !important;
+    min-height: auto !important;
+  }
+
+  .food-photo {
+    height: clamp(100px, 20vw, 160px);
+  }
+
+  .food-name {
+    font-size: 15px;
+  }
+}
+
+/* MOBILE / HP (PRESISI SESUAI DESIGN FIGMA) */
+@media (max-width: 480px) {
+  .navbar {
+    min-height: 80px !important;
+    padding: 12px 16px !important;
+  }
+
+  .brand {
+    font-size: 24px !important;
+  }
+
+  .brand span:last-child {
+    font-size: 20px !important;
+    padding-left: 0 !important;
+  }
+
+  .page-container {
+    width: 100% !important;
+    max-width: 402px !important;
+    margin: 0 auto !important;
+    padding: 12px 16px !important;
+    padding-top: 95px !important;
+  }
+
+  .page-caption {
+    font-size: 16px !important;
+    margin-bottom: 12px !important;
+  }
+
+  /* Kotak Pencarian */
+  .search-section {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 0 14px 0 !important;
+  }
+
+  .search-box {
+    width: 100% !important;
+    height: 40px !important;
+    padding: 0 16px !important;
+    border-radius: 30px !important;
+    border: 1px solid #d4d4d4 !important;
+  }
+
+  .search-box input {
+    font-size: 14px !important;
+  }
+
+  /* Map Banner */
+  .map-banner,
+  #map {
+    width: 100% !important;
+    height: 144px !important;
+    border-radius: 10px !important;
+    margin-bottom: 14px !important;
+  }
+
+  /* CONTAINER KATEGORI */
+  .category-section,
+  .kategori-container,
+  .category-list {
+    display: flex !important;
+    gap: 8px !important;
+    padding: 0 !important;
+    margin-bottom: 16px !important;
+    overflow-x: auto !important;
+    scroll-behavior: smooth !important;
+    scrollbar-width: none !important;
+  }
+
+  .category-section::-webkit-scrollbar,
+  .kategori-container::-webkit-scrollbar,
+  .category-list::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  /* TOMBOL KATEGORI 1 & 2 (Semua & Camilan) */
+  button.category-btn,
+  button.btn-kategori,
+  .category-btn,
+  .btn-kategori {
+    flex: 0 0 auto !important;
+    width: 100px !important;
+    height: 36px !important;
+    min-width: 100px !important;
+    max-width: 100px !important;
+    font-size: 13px !important;
+    font-weight: 400 !important;
+    white-space: nowrap !important;
+    border-radius: 5px !important;
+    padding: 0 4px !important;
+  }
+
+  /* KHUSUS TOMBOL KETIGA (Makanan Berat) DIBUAT LEBIH PANJANG */
+  button.category-btn:nth-child(3),
+  button.btn-kategori:nth-child(3),
+  .category-section button:nth-child(3),
+  .category-list button:nth-child(3) {
+    width: 125px !important;
+    min-width: 125px !important;
+    max-width: 125px !important;
+  }
+
+  /* GRID KARTU KULINER: Mengunci ukuran persis selebar 165px per kolom */
+  .food-grid,
+  .card-grid,
+  .kuliner-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 165px) !important; /* Mengunci lebar kolom tepat 165px */
+    justify-content: center !important; /* Memposisikan kedua kolom agar pas di tengah */
+    gap: 16px !important;
+    padding: 0 !important;
+    width: 100% !important;
+    margin: 0 auto !important;
+  }
+
+  /* KARTU KULINER MOBILE */
+  .food-card {
+    width: 165px !important; /* Lebar fix sesuai Figma */
+    min-width: 165px !important;
+    max-width: 165px !important;
+    height: 190px !important; /* Tinggi fix sesuai Figma */
+    padding: 8px !important;
+    background: #ffffff !important;
+    border: 1px solid #d4d4d4 !important;
+    box-shadow: 0px 4px 4px #001b7d !important; /* Bayangan bawah biru */
+    border-radius: 5px !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  /* FOTO KULINER */
+  .food-photo {
+    width: 145px !important; /* Lebar foto pas di dalam card */
+    min-width: 145px !important;
+    height: 95px !important;
+    object-fit: cover !important;
+    border-radius: 4px !important;
+    margin: 0 auto 6px auto !important;
+    display: block !important;
+  }
+
+  /* JUDUL KULINER */
+  .food-name {
+    font-size: 13px !important;
+    line-height: 16px !important;
+    margin: 0 0 2px 0 !important;
+    font-weight: 400 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  /* LOKASI / ALAMAT */
+  .food-location {
+    font-size: 7px !important;
+    line-height: 9px !important;
+    margin-bottom: 4px !important;
+    display: flex !important;
+    align-items: flex-start !important;
+    gap: 2px !important;
+    max-height: 20px !important;
+    overflow: hidden !important;
+  }
+
+  .food-location iconify-icon {
+    font-size: 12px !important;
+  }
+
+  /* HARGA & RATING */
+  .food-meta {
+    font-size: 10px !important;
+    font-weight: 400 !important;
+    margin-top: auto !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+  }
+}

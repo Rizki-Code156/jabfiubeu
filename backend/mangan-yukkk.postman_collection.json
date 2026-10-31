@@ -1,0 +1,541 @@
+{
+  "info": {
+    "name": "Mangan Yukkk API",
+    "description": "Collection untuk testing semua API Mangan Yukkk",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "BASE_URL",
+      "value": "http://localhost/ABIG-Anak-Buah-Ibu-Ghina-/backend",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register - Sukses",
+          "request": {
+            "method": "POST",
+            "url": "{{BASE_URL}}/api/register.php",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nama\": \"Test User\",\n  \"email\": \"testuser@gmail.com\",\n  \"password\": \"password123\",\n  \"konfirmasi_password\": \"password123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Register - Email Duplikat",
+          "request": {
+            "method": "POST",
+            "url": "{{BASE_URL}}/api/register.php",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nama\": \"Test User\",\n  \"email\": \"testuser@gmail.com\",\n  \"password\": \"password123\",\n  \"konfirmasi_password\": \"password123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Register - Field Kosong",
+          "request": {
+            "method": "POST",
+            "url": "{{BASE_URL}}/api/register.php",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nama\": \"\",\n  \"email\": \"\",\n  \"password\": \"\",\n  \"konfirmasi_password\": \"\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Register - Bukan Gmail",
+          "request": {
+            "method": "POST",
+            "url": "{{BASE_URL}}/api/register.php",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nama\": \"Test\",\n  \"email\": \"test@yahoo.com\",\n  \"password\": \"password123\",\n  \"konfirmasi_password\": \"password123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Register - Password Tidak Cocok",
+          "request": {
+            "method": "POST",
+            "url": "{{BASE_URL}}/api/register.php",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nama\": \"Test\",\n  \"email\": \"test@gmail.com\",\n  \"password\": \"password123\",\n  \"konfirmasi_password\": \"berbeda123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login - Sukses User",
+          "request": {
+            "method": "POST",
+            "url": "{{BASE_URL}}/api/login.php",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"testuser@gmail.com\",\n  \"password\": \"password123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login - Password Salah",
+          "request": {
+            "method": "POST",
+            "url": "{{BASE_URL}}/api/login.php",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"testuser@gmail.com\",\n  \"password\": \"salah123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login - Field Kosong",
+          "request": {
+            "method": "POST",
+            "url": "{{BASE_URL}}/api/login.php",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"\",\n  \"password\": \"\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Me - Cek Sesi",
+          "request": {
+            "method": "GET",
+            "url": "{{BASE_URL}}/api/me.php"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Kuliner",
+      "item": [
+        {
+          "name": "Get Semua Kuliner",
+          "request": {
+            "method": "GET",
+            "url": "{{BASE_URL}}/api/kuliner.php"
+          }
+        },
+        {
+          "name": "Get Kategori",
+          "request": {
+            "method": "GET",
+            "url": "{{BASE_URL}}/api/kategori.php"
+          }
+        },
+        {
+          "name": "Get Tempat Kuliner",
+          "request": {
+            "method": "GET",
+            "url": "{{BASE_URL}}/api/tempat_kuliner.php"
+          }
+        },
+        {
+          "name": "Detail Kuliner - ID Valid",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{BASE_URL}}/api/detail_kuliner.php?id=9",
+              "query": [{ "key": "id", "value": "9" }]
+            }
+          }
+        },
+        {
+          "name": "Detail Kuliner - ID Tidak Valid",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{BASE_URL}}/api/detail_kuliner.php?id=abc",
+              "query": [{ "key": "id", "value": "abc" }]
+            }
+          }
+        },
+        {
+          "name": "Detail Kuliner - ID Tidak Ada",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{BASE_URL}}/api/detail_kuliner.php?id=9999",
+              "query": [{ "key": "id", "value": "9999" }]
+            }
+          }
+        },
+        {
+          "name": "Filter Kuliner - Makanan Berat",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{BASE_URL}}/api/filter_kuliner.php?kategori=makanan berat",
+              "query": [{ "key": "kategori", "value": "makanan berat" }]
+            }
+          }
+        },
+        {
+          "name": "Filter Kuliner - Kategori Kosong",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{BASE_URL}}/api/filter_kuliner.php?kategori=",
+              "query": [{ "key": "kategori", "value": "" }]
+            }
+          }
+        },
+        {
+          "name": "Search - Ada Hasil",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{BASE_URL}}/api/search.php?q=empal",
+              "query": [{ "key": "q", "value": "empal" }]
+            }
+          }
+        },
+        {
+          "name": "Search - Tidak Ada Hasil",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{BASE_URL}}/api/search.php?q=xyzabc123",
+              "query": [{ "key": "q", "value": "xyzabc123" }]
+            }
+          }
+        },
+        {
+          "name": "Search - Kata Kunci Kosong",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{BASE_URL}}/api/search.php?q=",
+              "query": [{ "key": "q", "value": "" }]
+            }
+          }
+        },
+        {
+          "name": "Rekomendasi Kuliner",
+          "request": {
+            "method": "GET",
+            "url": "{{BASE_URL}}/api/rekomendasi.php"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Favorit",
+      "item": [
+        {
+          "name": "GET Daftar Favorit",
+          "request": {
+            "method": "GET",
+            "url": "{{BASE_URL}}/api/favorit.php"
+          }
+        },
+        {
+          "name": "POST Simpan Favorit - Sukses",
+          "request": {
+            "method": "POST",
+            "url": "{{BASE_URL}}/api/favorit.php",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_tempat\": 9\n}"
+            }
+          }
+        },
+        {
+          "name": "POST Simpan Favorit - Duplikat",
+          "request": {
+            "method": "POST",
+            "url": "{{BASE_URL}}/api/favorit.php",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_tempat\": 9\n}"
+            }
+          }
+        },
+        {
+          "name": "POST Simpan Favorit - ID Tidak Valid",
+          "request": {
+            "method": "POST",
+            "url": "{{BASE_URL}}/api/favorit.php",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_tempat\": 0\n}"
+            }
+          }
+        },
+        {
+          "name": "DELETE Hapus Favorit - Sukses",
+          "request": {
+            "method": "DELETE",
+            "url": "{{BASE_URL}}/api/favorit.php",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_tempat\": 9\n}"
+            }
+          }
+        },
+        {
+          "name": "DELETE Hapus Favorit - Tidak Ada",
+          "request": {
+            "method": "DELETE",
+            "url": "{{BASE_URL}}/api/favorit.php",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_tempat\": 9999\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Ulasan",
+      "item": [
+        {
+          "name": "GET Ulasan Per Kuliner",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{BASE_URL}}/api/ulasan.php?id_tempat=9",
+              "query": [{ "key": "id_tempat", "value": "9" }]
+            }
+          }
+        },
+        {
+          "name": "GET Ulasan Pribadi",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{BASE_URL}}/api/ulasan.php?milik_saya=1",
+              "query": [{ "key": "milik_saya", "value": "1" }]
+            }
+          }
+        },
+        {
+          "name": "POST Tambah Ulasan - Sukses",
+          "request": {
+            "method": "POST",
+            "url": "{{BASE_URL}}/api/ulasan.php",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_tempat\": 9,\n  \"rating\": 5,\n  \"komentar\": \"Enak banget rasanya!\",\n  \"foto_url\": \"\"\n}"
+            }
+          }
+        },
+        {
+          "name": "POST Tambah Ulasan - Rating Saja",
+          "request": {
+            "method": "POST",
+            "url": "{{BASE_URL}}/api/ulasan.php",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_tempat\": 10,\n  \"rating\": 4\n}"
+            }
+          }
+        },
+        {
+          "name": "POST Tambah Ulasan - Komentar Terlalu Pendek",
+          "request": {
+            "method": "POST",
+            "url": "{{BASE_URL}}/api/ulasan.php",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_tempat\": 9,\n  \"komentar\": \"Ok\"\n}"
+            }
+          }
+        },
+        {
+          "name": "PUT Ubah Ulasan - Sukses",
+          "request": {
+            "method": "PUT",
+            "url": "{{BASE_URL}}/api/ulasan.php",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_ulasan\": 1,\n  \"rating\": 4,\n  \"komentar\": \"Lumayan enak sih\"\n}"
+            }
+          }
+        },
+        {
+          "name": "DELETE Hapus Ulasan - Sukses",
+          "request": {
+            "method": "DELETE",
+            "url": "{{BASE_URL}}/api/ulasan.php",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_ulasan\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "DELETE Hapus Ulasan - Bukan Milik Sendiri",
+          "request": {
+            "method": "DELETE",
+            "url": "{{BASE_URL}}/api/ulasan.php",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_ulasan\": 9999\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Rating",
+      "item": [
+        {
+          "name": "GET Statistik Rating",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{BASE_URL}}/api/rating.php?id_tempat=9",
+              "query": [{ "key": "id_tempat", "value": "9" }]
+            }
+          }
+        },
+        {
+          "name": "POST Simpan Rating Baru",
+          "request": {
+            "method": "POST",
+            "url": "{{BASE_URL}}/api/rating.php",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_tempat\": 9,\n  \"rating\": 5\n}"
+            }
+          }
+        },
+        {
+          "name": "POST Rating - Nilai Tidak Valid",
+          "request": {
+            "method": "POST",
+            "url": "{{BASE_URL}}/api/rating.php",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_tempat\": 9,\n  \"rating\": 6\n}"
+            }
+          }
+        },
+        {
+          "name": "PUT Ubah Rating",
+          "request": {
+            "method": "PUT",
+            "url": "{{BASE_URL}}/api/rating.php",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_ulasan\": 1,\n  \"rating\": 4\n}"
+            }
+          }
+        },
+        {
+          "name": "DELETE Hapus Rating",
+          "request": {
+            "method": "DELETE",
+            "url": "{{BASE_URL}}/api/rating.php",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_ulasan\": 1\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Profil",
+      "item": [
+        {
+          "name": "GET Profil",
+          "request": {
+            "method": "GET",
+            "url": "{{BASE_URL}}/api/profil.php"
+          }
+        },
+        {
+          "name": "PUT Ubah Nama",
+          "request": {
+            "method": "PUT",
+            "url": "{{BASE_URL}}/api/profil.php",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nama\": \"Nama Baru\"\n}"
+            }
+          }
+        },
+        {
+          "name": "PUT Ubah Foto Profil",
+          "request": {
+            "method": "PUT",
+            "url": "{{BASE_URL}}/api/profil.php",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"foto_profil\": \"https://kppeplufcluygonkolou.supabase.co/storage/v1/object/public/foto-profil/test.jpg\"\n}"
+            }
+          }
+        },
+        {
+          "name": "POST Ubah Kata Sandi - Sukses",
+          "request": {
+            "method": "POST",
+            "url": "{{BASE_URL}}/api/profil.php",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"password_lama\": \"password123\",\n  \"password_baru\": \"newpassword123\",\n  \"konfirmasi_baru\": \"newpassword123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "POST Ubah Kata Sandi - Password Lama Salah",
+          "request": {
+            "method": "POST",
+            "url": "{{BASE_URL}}/api/profil.php",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"password_lama\": \"salah123\",\n  \"password_baru\": \"newpassword123\",\n  \"konfirmasi_baru\": \"newpassword123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "POST Ubah Kata Sandi - Terlalu Pendek",
+          "request": {
+            "method": "POST",
+            "url": "{{BASE_URL}}/api/profil.php",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"password_lama\": \"password123\",\n  \"password_baru\": \"123\",\n  \"konfirmasi_baru\": \"123\"\n}"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

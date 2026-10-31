@@ -1,0 +1,379 @@
+/* Styling Tombol Harga Biru di Atas (Sesuai Figma) */
+.price-badge {
+  display: inline-flex !important;
+  height: 44px !important;
+  padding: 0 24px !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: #001b7d !important;
+  color: #ffffff !important;
+  border-radius: 12px !important;
+  font-family: "Inter", sans-serif !important;
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  margin-top: 16px !important;
+  width: fit-content !important;
+}
+
+/* Penyesuaian Grid Detail */
+.detail-grid {
+  display: grid;
+  grid-template-columns: 460px 1fr;
+  gap: 40px;
+  align-items: start;
+  width: 100%;
+}
+
+.food-detail-photo {
+  width: 100%;
+  height: 340px;
+  object-fit: cover;
+  border-radius: 16px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  display: block;
+}
+
+.food-detail-title {
+  font-size: 38px;
+  font-weight: 700;
+  color: #000000;
+  line-height: 1.2;
+  margin-bottom: 16px;
+}
+
+.food-description {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #444;
+  margin-bottom: 24px;
+}
+
+.food-location-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.food-location-wrapper iconify-icon {
+  font-size: 20px;
+  color: #555;
+  flex-shrink: 0;
+}
+
+.info-section-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #000000;
+  margin-bottom: 12px;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  color: #333;
+}
+
+.info-item iconify-icon {
+  font-size: 20px;
+  color: #555;
+}
+
+.btn-location {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 12px 32px;
+  background: var(--primary);
+  color: #ffffff;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 500;
+  transition: opacity 0.2s;
+  white-space: nowrap;
+}
+
+/* Styling Bintang Interaktif Kotak Kiri */
+.direct-star-option {
+  transition: transform 0.15s ease, color 0.15s ease;
+  user-select: none;
+}
+
+.direct-star-option:hover {
+  transform: scale(1.15);
+}
+
+.direct-star-option.active {
+  color: #ffbf00 !important;
+}
+
+/* Toast Notifikasi Bookmark */
+.bookmark-toast {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: #ffffff;
+  padding: 10px 16px;
+  border-radius: 12px;
+  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  z-index: 10;
+  white-space: nowrap;
+}
+
+.bookmark-toast.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+.toast-content-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #001b7d;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: "Inter", sans-serif;
+}
+
+.toast-content-wrapper iconify-icon {
+  font-size: 20px;
+  color: #2e7d32;
+}
+
+.btn-toast-kelola {
+  background: #001b7d;
+  color: #ffffff;
+  padding: 6px 12px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Tombol Bookmark Melayang di Foto */
+.btn-bookmark-floating {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  width: 44px;
+  height: 44px;
+  background: #ffffff;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: transform 0.2s;
+  z-index: 5;
+}
+
+.btn-bookmark-floating:hover {
+  transform: scale(1.08);
+}
+
+.btn-bookmark-floating iconify-icon {
+  font-size: 24px;
+  color: #001b7d;
+}
+
+.btn-bookmark-floating.saved iconify-icon {
+  color: #001b7d;
+}
+
+/* Formulir Ulasan & Pratinjau Foto */
+.review-form {
+  background: #f9f9f9;
+  border: 1px solid #d7dced;
+  border-radius: 16px;
+  padding: 24px;
+  font-family: "Inter", sans-serif;
+}
+
+.review-rating-fieldset {
+  border: none;
+  padding: 0;
+  margin: 0 0 16px 0;
+}
+
+.review-form-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #000;
+  margin-bottom: 8px;
+}
+
+.review-rating-inputs {
+  display: flex;
+  gap: 6px;
+}
+
+.review-rating-option {
+  cursor: pointer;
+  font-size: 28px;
+  color: #ffbf00;
+}
+
+.review-rating-option input {
+  display: none;
+}
+
+.review-form textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  resize: vertical;
+}
+
+.review-form-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #666;
+  margin-top: 4px;
+  margin-bottom: 12px;
+}
+
+.review-photo-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  color: #555;
+  margin-bottom: 12px;
+}
+
+.review-photo-add {
+  width: 36px;
+  height: 36px;
+  background: #001b7d;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.review-photo-preview {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  margin-bottom: 12px;
+}
+
+.review-photo-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+#removeReviewPhoto {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: red;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.review-submit {
+  background: #001b7d;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.review-cancel {
+  background: #e0e0e0;
+  color: #333;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Kartu Ulasan Pengguna */
+.review-photo {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 6px;
+  margin-top: 8px;
+  display: block;
+}
+
+.review-owner-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.review-action {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  color: #555;
+  padding: 0;
+}
+
+.review-action:hover {
+  color: #001b7d;
+}
+
+/* Tampilan Error */
+.error-state-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+}
+
+.error-message-box {
+  text-align: center;
+  font-family: "Inter", sans-serif;
+}
+
+.error-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 12px;
+}
+
+.error-retry-link {
+  display: inline-block;
+  background: #001b7d;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+}
