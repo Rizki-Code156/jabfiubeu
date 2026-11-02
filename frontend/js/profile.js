@@ -244,24 +244,24 @@ async function logout() {
   button.disabled = true;
   document.getElementById("cancelLogoutButton").disabled = true;
   error.hidden = true;
+
+  // Clear localStorage dulu — logout di sisi client selalu berhasil
+  localStorage.clear();
+
+  // Coba destroy session di backend (best-effort, tidak block logout)
   try {
-    const response = await fetch(`${PROFILE_API_BASE}/logout.php`, {
+    await fetch(`${PROFILE_API_BASE}/logout.php`, {
       method: "GET",
       credentials: "include",
       headers: { "X-Requested-With": "XMLHttpRequest" },
     });
-    if (!response.ok) throw new Error("Gagal mengakhiri sesi. Silakan coba lagi.");
-    localStorage.clear();
-    document.getElementById("logoutConfirmDialog").hidden = true;
-    document.getElementById("logoutSuccessDialog").hidden = false;
-    document.getElementById("finishLogoutButton").focus();
-  } catch (requestError) {
-    error.textContent = getRequestErrorMessage(requestError, "Gagal mengakhiri sesi.");
-    error.hidden = false;
-    button.disabled = false;
-    document.getElementById("cancelLogoutButton").disabled = false;
-    button.focus();
+  } catch (_) {
+    // Abaikan error jaringan — session di server akan expired sendiri
   }
+
+  document.getElementById("logoutConfirmDialog").hidden = true;
+  document.getElementById("logoutSuccessDialog").hidden = false;
+  document.getElementById("finishLogoutButton").focus();
 }
 
 function openLogoutConfirmation() {
