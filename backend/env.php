@@ -41,23 +41,40 @@ loadEnv(__DIR__ . '/../.env');
 /**
  * Set CORS header berdasarkan origin request.
  * Untuk endpoint yang butuh credentials (session/cookie).
+ *
+ * Konfigurasi melalui env variable CORS_ALLOWED_ORIGINS (dipisah koma),
+ * atau fallback ke FRONTEND_URL jika tidak di-set.
  */
 function setCorsHeaders(): void
 {
-    $allowed_origins = [
-        'http://localhost',
-        'http://localhost:3000',
-        'http://127.0.0.1',
-        'http://manganyukkk.my.id',
-        'http://manganyukkk.my.id:3001',
-    ];
+    $envOrigins  = getenv('CORS_ALLOWED_ORIGINS');
+    $frontendUrl = getenv('FRONTEND_URL');
+
+    if ($envOrigins) {
+        $allowed_origins = array_map('trim', explode(',', $envOrigins));
+    } elseif ($frontendUrl) {
+        // Tambahkan variasi port umum secara otomatis dari FRONTEND_URL
+        $allowed_origins = [
+            rtrim($frontendUrl, '/'),
+            'http://localhost',
+            'http://localhost:3000',
+            'http://127.0.0.1',
+        ];
+    } else {
+        $allowed_origins = [
+            'http://localhost',
+            'http://localhost:3000',
+            'http://127.0.0.1',
+        ];
+    }
 
     $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
 
     if (in_array($origin, $allowed_origins)) {
         header('Access-Control-Allow-Origin: ' . $origin);
     } else {
-        header('Access-Control-Allow-Origin: ' . ($allowed_origins[0]));
+        // Tolak origin yang tidak dikenal — gunakan origin pertama yang valid
+        header('Access-Control-Allow-Origin: ' . $allowed_origins[0]);
     }
 
     header('Access-Control-Allow-Credentials: true');

@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
+  const AUTH_API_BASE = window.AUTH_API_BASE || window.BASE_URL || window.location.origin;
   const navbarContainer = document.getElementById("navbar-container");
 
   // 1. TAMBAHKAN STYLING KUSTOM SWEETALERT UNTUK UKURAN & BORDER
@@ -64,47 +65,80 @@ document.addEventListener("DOMContentLoaded", function () {
       .then((html) => {
         navbarContainer.innerHTML = html;
         window.initNavbarState();
+        return syncNavbarSession();
       })
+      .then(() => window.initNavbarState())
       .catch((error) => console.error("Gagal memuat navbar:", error));
+  }
+
+  async function syncNavbarSession() {
+    try {
+      const response = await fetch(`${AUTH_API_BASE}/api/me.php`, {
+        credentials: "include",
+      });
+
+      if (response.status === 401) {
+        localStorage.removeItem("user");
+        localStorage.removeItem("role");
+        return;
+      }
+
+      if (!response.ok) throw new Error(`Gagal memeriksa sesi (HTTP ${response.status}).`);
+
+      const result = await response.json();
+      if (!result.status || !result.data || !result.role) {
+        throw new Error(result.message || "Respons sesi tidak valid.");
+      }
+
+      localStorage.setItem("user", JSON.stringify(result.data));
+      localStorage.setItem("role", result.role);
+    } catch (error) {
+      console.error("Gagal memeriksa sesi navbar:", error);
+    }
+  }
+
+  function getAuthState() {
+    const rawUser = localStorage.getItem("user");
+    const rawRole = localStorage.getItem("role");
+    let user = null;
+
+    if (rawUser && rawUser !== "null" && rawUser !== "undefined") {
+      try {
+        const parsedUser = JSON.parse(rawUser);
+        if (parsedUser && typeof parsedUser === "object") user = parsedUser;
+      } catch (error) {
+        console.error("[Auth System] Data pengguna tidak valid.", error);
+      }
+    }
+
+    const role = rawRole && rawRole !== "null" && rawRole !== "undefined" ? rawRole : "";
+    return { user, role, isLoggedIn: Boolean(user || role) };
   }
 
   // 3. FUNGSI UTAMA RENDER STATUS LOGIN & KONDISI TOMBOL LOGOUT
   window.initNavbarState = function () {
-    const userData = localStorage.getItem("user");
-    const userRole = localStorage.getItem("role");
-
-    const isLoggedIn = (!!userData && userData !== "null" && userData !== "undefined") || !!userRole;
+    const { user, role, isLoggedIn } = getAuthState();
     console.info("[Auth System] Navbar status", {
       loggedIn: isLoggedIn,
-      role: userRole || "guest",
+      role: role || "guest",
     });
 
     const guestNavLinks = document.getElementById("guestNavLinks");
     const userNavLinks = document.getElementById("userNavLinks");
     const profileButton = document.getElementById("profileButton");
-    const btnLogout = document.getElementById("btnLogout");
+    const navUserName = document.getElementById("navUserName");
 
     if (isLoggedIn) {
-      // Jika SUDAH LOGIN: Tampilkan ikon-ikon menu, sembunyikan tombol Beranda & Masuk
       if (guestNavLinks) guestNavLinks.style.setProperty("display", "none", "important");
       if (userNavLinks) userNavLinks.style.setProperty("display", "flex", "important");
-
-      if (profileButton) {
-        profileButton.title = "Profil";
-        profileButton.innerHTML = `<iconify-icon icon="famicons:person" width="22" height="22"></iconify-icon>`;
-      }
-
-      if (btnLogout) {
-        btnLogout.style.setProperty("display", "inline-flex", "important");
-      }
+      if (navUserName) navUserName.textContent = user?.nama || user?.name || user?.full_name || "Pengguna";
+      if (profileButton) profileButton.title = `Profil ${navUserName?.textContent || "Pengguna"}`;
     } else {
-      // Jika BELUM LOGIN: Tampilkan tulisan "Beranda" & tombol "Masuk", sembunyikan dropdown ikon
       if (guestNavLinks) guestNavLinks.style.setProperty("display", "flex", "important");
       if (userNavLinks) userNavLinks.style.setProperty("display", "none", "important");
     }
 
-    // Log status sistem auth ke console untuk debugging
-    if (userData) {
+    if (user) {
       console.info("[Auth System] Status: User Terautentikasi");
     } else {
       console.log("[Auth System] Status: Belum ada sesi login (Guest).");
@@ -120,9 +154,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const savedButton = event.target.closest("#savedButton");
     const reviewButton = event.target.closest("#reviewButton");
 
-    const userData = localStorage.getItem("user");
-    const userRole = localStorage.getItem("role");
-    const isLoggedIn = (!!userData && userData !== "null" && userData !== "undefined") || !!userRole;
+    const { isLoggedIn } = getAuthState();
 
     // Toggle Dropdown Menu
     if (navMenuToggle) {
@@ -149,10 +181,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Proteksi Navigasi Halaman Saved (Ikon Bookmark)
     if (savedButton) {
-      const checkUser = localStorage.getItem("user");
-      const checkRole = localStorage.getItem("role");
-      const isLoggedIn = (checkUser && checkUser !== "null" && checkUser !== "undefined") || (checkRole && checkRole !== "null");
-
       if (!isLoggedIn) {
         // Jika BELUM LOGIN, batalkan pindah halaman dan arahkan ke login.html
         event.preventDefault();
@@ -238,7 +266,7 @@ document.addEventListener("DOMContentLoaded", function () {
     localStorage.removeItem("role");
     localStorage.clear();
 
-    fetch("http://localhost/ABIG-Anak-Buah-Ibu-Ghina-/backend/api/logout.php", {
+    fetch(AUTH_API_BASE + "/api/logout.php", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
     })

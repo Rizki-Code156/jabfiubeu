@@ -1,6 +1,9 @@
 # Environment Variables (jangan di-push ke repo!)
 .env
 
+# File env yang di-generate otomatis oleh Docker entrypoint saat runtime
+# (bukan file statis — di-overwrite tiap container start)
+# frontend/js/env.js TIDAK di-ignore karena serve sebagai default lokal
 # Dependency directories
 backend/vendor/
 

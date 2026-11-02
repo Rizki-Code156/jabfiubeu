@@ -142,6 +142,23 @@
         -webkit-line-clamp: 2 !important;
         -webkit-box-orient: vertical !important;
       }
+      .recommendations-section {
+        margin: 20px 0 28px;
+      }
+      .recommendations-title {
+        margin: 0 0 14px;
+        color: #001b7d;
+        font-size: 20px;
+        font-weight: 600;
+      }
+      .recommendations-status {
+        margin: 0;
+        color: #666;
+        font-size: 14px;
+      }
+      #recommendationsGrid[hidden] {
+        display: none !important;
+      }
     </style>
 
     <!-- Google Fonts -->
@@ -191,6 +208,12 @@
         </div>
       </section>
 
+      <section class="recommendations-section" aria-labelledby="recommendationsTitle">
+        <h2 class="recommendations-title" id="recommendationsTitle">Rekomendasi Kuliner</h2>
+        <p class="recommendations-status" id="recommendationsStatus" role="status" aria-live="polite">Memuat rekomendasi...</p>
+        <div class="food-grid" id="recommendationsGrid" hidden></div>
+      </section>
+
       <!-- Daftar Kuliner -->
       <section class="food-grid" id="foodGrid" aria-label="Daftar kuliner">
         <div id="loadingIndicator" style="display: none; text-align: center; padding: 20px">Loading...</div>
@@ -201,10 +224,11 @@
     </main>
 
     <!-- File JavaScript External -->
-    <script src="js/navbar.js"></script>
-    
+    <script src="js/env.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/navbar.js?v=session-api"></script>
+
     <script>
-      const BASE_URL = "http://manganyukkk.my.id";
 
       window.map = null;
       window.markers = [];
@@ -324,8 +348,8 @@
         }
       }
 
-      // 2. LOAD KULINER CARD
-      async function loadKuliner() {
+   // 2. LOAD KULINER CARD
+   async function loadKuliner() {
         const foodGrid = document.getElementById("foodGrid");
         const loadingIndicator = document.getElementById("loadingIndicator");
         const emptyMessage = document.getElementById("emptyMessage");
@@ -349,18 +373,38 @@
             kulinerMap.set(String(k.id_kuliner), k);
           });
 
-          window.allKuliner = jsonTempat.data.map((item) => {
-            const detailKuliner = kulinerMap.get(String(item.id_kuliner)) || {};
-            return {
-              ...item,
-              nama_kuliner: item.nama_kuliner || detailKuliner.nama_kuliner || detailKuliner.nama || "",
-              kategori: detailKuliner.kategori || detailKuliner.nama_kategori || item.kategori || "",
-              deskripsi: detailKuliner.deskripsi || detailKuliner.deskripsi_kuliner || "",
-              foto: item.foto || detailKuliner.foto || "",
-              // Pastikan mengambil harga dari detailKuliner terlebih dahulu, lalu item, dan fallback ke 0
-              harga: detailKuliner.harga !== undefined ? detailKuliner.harga : item.harga !== undefined ? item.harga : 0,
-            };
-          });
+          // Ambil rating secara paralel untuk setiap tempat agar akurat seperti di detail_kuliner.html
+          window.allKuliner = await Promise.all(
+            jsonTempat.data.map(async (item) => {
+              const detailKuliner = kulinerMap.get(String(item.id_kuliner)) || {};
+              const idTempat = item.id_tempat || detailKuliner.id_tempat;
+              
+              let dynRating = 0;
+              if (idTempat) {
+                try {
+                  const resDetail = await fetch(`${BASE_URL}/api/detail_kuliner.php?id=${encodeURIComponent(idTempat)}`);
+                  if (resDetail.ok) {
+                    const jsonDetail = await resDetail.json();
+                    if (jsonDetail.status && jsonDetail.data) {
+                      dynRating = Number(jsonDetail.data.rata_rata_rating || 0);
+                    }
+                  }
+                } catch (e) {
+                  // abaikan jika gagal fetch individual
+                }
+              }
+
+              return {
+                ...item,
+                nama_kuliner: item.nama_kuliner || detailKuliner.nama_kuliner || detailKuliner.nama || "",
+                kategori: detailKuliner.kategori || detailKuliner.nama_kategori || item.kategori || "",
+                deskripsi: detailKuliner.deskripsi || detailKuliner.deskripsi_kuliner || "",
+                foto: item.foto || detailKuliner.foto || "",
+                harga: detailKuliner.harga !== undefined ? detailKuliner.harga : item.harga !== undefined ? item.harga : 0,
+                rata_rata_rating: dynRating > 0 ? dynRating : (item.rata_rata_rating || detailKuliner.rata_rata_rating || 0),
+              };
+            })
+          );
 
           renderKuliner();
         } catch (error) {
@@ -404,30 +448,31 @@
         if (emptyMessage) emptyMessage.style.display = "none";
         foodGrid.style.display = "flex";
 
-        foodGrid.innerHTML = window.allKuliner
-          .map((item) => {
-            const name = escapeHTML(item.nama_kuliner || item.nama || "Nama kuliner");
-            const place = escapeHTML(item.nama_tempat || "Tempat belum tersedia");
-            const address = escapeHTML(item.alamat || "Alamat belum tersedia");
+        foodGrid.innerHTML = window.allKuliner.map(renderFoodCard).join("");
+      }
 
-            const numericPrice = Number(item.harga);
-            const price = Number.isFinite(numericPrice) ? numericPrice.toLocaleString("id-ID") : "0";
-            const photo = getSafePhoto(item.foto);
+      function renderFoodCard(item) {
+        const name = escapeHTML(item.nama_kuliner || item.nama || "Nama kuliner");
+        const place = escapeHTML(item.nama_tempat || "Tempat belum tersedia");
+        const address = escapeHTML(item.alamat || "Alamat belum tersedia");
+        const numericPrice = Number(item.harga);
+        const price = Number.isFinite(numericPrice) ? numericPrice.toLocaleString("id-ID") : "0";
+        const photo = getSafePhoto(item.foto || item.foto_tempat || item.foto_kuliner);
+        const ratingNum = Number(item.rata_rata_rating || item.rating || 0).toFixed(1);
+        const dataQuery = new URLSearchParams({
+          id: item.id_tempat || item.id_kuliner || "",
+          nama: item.nama_kuliner || item.nama || item.nama_tempat || "Kuliner",
+          deskripsi: item.deskripsi || "Deskripsi belum tersedia.",
+          foto: photo,
+          harga: item.harga || "0",
+          alamat: `${item.nama_tempat ? item.nama_tempat + " — " : ""}${item.alamat || "Alamat tidak tersedia"}`,
+          jam: item.jam_buka && item.jam_tutup ? `${item.jam_buka.substring(0, 5)} - ${item.jam_tutup.substring(0, 5)}` : "09:00 - 21:00",
+          lat: item.latitude || "",
+          lng: item.longitude || "",
+          no_telepon: item.no_telepon || "",
+        }).toString();
 
-            const dataQuery = new URLSearchParams({
-              id: item.id_tempat || item.id_kuliner || "",
-              nama: item.nama_kuliner || item.nama_tempat || "Kuliner",
-              deskripsi: item.deskripsi || "Deskripsi belum tersedia.",
-              foto: photo,
-              harga: item.harga || "0",
-              alamat: `${item.nama_tempat ? item.nama_tempat + " — " : ""}${item.alamat || "Alamat tidak tersedia"}`,
-              jam: item.jam_buka && item.jam_tutup ? `${item.jam_buka.substring(0, 5)} - ${item.jam_tutup.substring(0, 5)}` : "09:00 - 21:00",
-              lat: item.latitude || "",
-              lng: item.longitude || "",
-              no_telepon: item.no_telepon || "",
-            }).toString();
-
-            return `
+        return `
             <a href="detail_kuliner.html?${dataQuery}" class="food-card" style="text-decoration: none; color: inherit; cursor: pointer; display: flex; flex-direction: column;">
               <img class="food-photo" src="${photo}" alt="${name}" loading="lazy" onerror="this.onerror=null;this.src='https://placehold.co/400x300/e0e0e0/555555?text=Kuliner'" />
               <h3 class="food-name">${name}</h3>
@@ -439,13 +484,37 @@
                 <span>Rp. ${price}</span>
                 <div style="display: flex; align-items: center; gap: 4px; font-weight: 700; font-size: 13px; color: #333333;">
                   <iconify-icon icon="material-symbols:star" style="color: #FFBF00; font-size: 18px;"></iconify-icon>
-                  <span>0.0</span>
+                  <span>${ratingNum}</span>
                 </div>
               </div>
             </a>
           `;
-          })
-          .join("");
+      }
+
+      async function loadRecommendations() {
+        const status = document.getElementById("recommendationsStatus");
+        const grid = document.getElementById("recommendationsGrid");
+        try {
+          const response = await fetch(`${BASE_URL}/api/rekomendasi.php`);
+          if (!response.ok) throw new Error(`Gagal memuat rekomendasi (HTTP ${response.status}).`);
+
+          const result = await response.json();
+          if (!result.status || !Array.isArray(result.data)) {
+            throw new Error(result.message || "Format data rekomendasi tidak sesuai.");
+          }
+
+          if (result.data.length === 0) {
+            status.textContent = "Belum ada rekomendasi kuliner.";
+            return;
+          }
+
+          grid.innerHTML = result.data.map(renderFoodCard).join("");
+          grid.hidden = false;
+          status.hidden = true;
+        } catch (error) {
+          console.error("Gagal memuat rekomendasi kuliner:", error);
+          status.textContent = "Rekomendasi belum dapat dimuat. Silakan coba lagi nanti.";
+        }
       }
 
       // 4. LOAD KATEGORI DINAMIS DARI API kategori.php[cite: 8]
@@ -475,7 +544,6 @@
       }
 
       // 5. EVENT LISTENER TOMBOL KATEGORI MENGGUNAKAN API filter_kuliner.php
-      // 5. EVENT LISTENER TOMBOL KATEGORI (Sinkron dengan data lengkap)
       function setupCategoryEventListeners() {
         const categoryBtns = document.querySelectorAll(".category-btn");
 
@@ -496,19 +564,16 @@
 
             try {
               if (selectedCat === "semua") {
-                // Jika pilih 'semua', panggil kembali loadKuliner agar data lengkap terisi
                 await loadKuliner();
                 return;
               }
 
-              // Ambil data dari filter_kuliner.php
               const response = await fetch(`${BASE_URL}/api/filter_kuliner.php?kategori=${encodeURIComponent(selectedCat)}`);
               if (!response.ok) throw new Error("Gagal mengambil data berdasarkan kategori.");
 
               const jsonResult = await response.json();
               const rawData = jsonResult.status && Array.isArray(jsonResult.data) ? jsonResult.data : [];
 
-              // Pastikan data hasil filter dilengkapi harga & tempat jika backend belum melakukan JOIN
               window.allKuliner = rawData.map((item) => {
                 return {
                   ...item,
@@ -518,6 +583,7 @@
                   deskripsi: item.deskripsi || "",
                   foto: item.foto || "",
                   harga: item.harga !== undefined && item.harga !== null ? item.harga : 0,
+                  rata_rata_rating: item.rata_rata_rating || item.rating || 0,
                 };
               });
 
@@ -655,33 +721,27 @@
             if (foodGrid) foodGrid.setAttribute("aria-busy", "true");
 
             try {
-              // 1. Ambil data dari backend (menggunakan endpoint search.php atau fallback ke data lokal window.allKuliner)
               const response = await fetch(`${BASE_URL}/api/search.php?q=${encodeURIComponent(rawKeyword)}`);
-              
+
               let searchResults = [];
               if (response.ok) {
                 const jsonResult = await response.json();
                 searchResults = jsonResult.status && Array.isArray(jsonResult.data) ? jsonResult.data : [];
               }
 
-              // 2. Jika backend hanya mencocokkan satu kolom, kita lakukan filter tambahan di frontend
-              // agar pencarian multi-kata (Nama Kuliner + Tempat/Alamat) lebih fleksibel dan akurat.
-              // Kita ambil sumber data dari allKuliner yang sudah ada atau hasil fetch search.php
               let baseSource = window.allKuliner.length > 0 ? window.allKuliner : searchResults;
-              
-              // Pecah input pencarian menjadi beberapa kata (contoh: "mie koclok lawanggada" -> ["mie", "koclok", "lawanggada"])
               const searchWords = rawKeyword.split(/\s+/);
 
-              window.allKuliner = baseSource.map(item => {
-                // Pastikan properti nama kuliner, tempat, dan alamat digabung menjadi satu teks pencarian
-                const searchableText = `${item.nama_kuliner || item.nama || ""} ${item.nama_tempat || ""} ${item.alamat || ""}`.toLowerCase();
-                item.__searchMatch = searchWords.every(word => searchableText.includes(word));
-                return item;
-              }).filter(item => {
-                // Jika pencarian dari backend kosong tapi data lokal ada, atau untuk memfilter multi-kata
-                const searchableText = `${item.nama_kuliner || item.nama || ""} ${item.nama_tempat || ""} ${item.alamat || ""}`.toLowerCase();
-                return searchWords.every(word => searchableText.includes(word));
-              });
+              window.allKuliner = baseSource
+                .map((item) => {
+                  const searchableText = `${item.nama_kuliner || item.nama || ""} ${item.nama_tempat || ""} ${item.alamat || ""}`.toLowerCase();
+                  item.__searchMatch = searchWords.every((word) => searchableText.includes(word));
+                  return item;
+                })
+                .filter((item) => {
+                  const searchableText = `${item.nama_kuliner || item.nama || ""} ${item.nama_tempat || ""} ${item.alamat || ""}`.toLowerCase();
+                  return searchWords.every((word) => searchableText.includes(word));
+                });
 
               renderKuliner();
             } catch (error) {
@@ -715,9 +775,9 @@
 
         loadKategori();
         loadKuliner();
+        loadRecommendations();
         checkGoogleLoginSession();
       });
-      
     </script>
 
     <!-- 1. Script Handler (Wajib SEBELUM script Google Maps API) -->
@@ -735,18 +795,13 @@
         }
       }
 
-      // Dipanggil otomatis jika API Key / Billing bermasalah
       window.gm_authFailure = function () {
         showMapError();
       };
     </script>
 
-    <!-- 2. Google Maps API (Hanya 1 tag script saja) -->
-    <script 
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAVT4Fqq5bqOwF7x2sfKR0yrUpV-oY1z4M&callback=initMap" 
-      onerror="showMapError()" 
-      async defer>
-    </script>
+    <!-- 2. Google Maps API -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAMf_5rwK4D5TswcEAqEEGTc-YfeQsVoTA&callback=initMap" onerror="showMapError()" async defer></script>
 
     <!-- 3. Styling Fallback Error Box -->
     <style>

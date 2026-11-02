@@ -8,7 +8,7 @@ $client->setAuthConfig(json_decode(getenv('GOOGLE_CLIENT_SECRET'), true));
 
 // Mengarahkan redirect URI ke callback.php
 $client->setRedirectUri(
-    getenv('BACKEND_URL') ? getenv('BACKEND_URL') . '/callback.php' : 'http://localhost/ABIG-Anak-Buah-Ibu-Ghina-/backend/callback.php'
+    getenv('BACKEND_URL') ? getenv('BACKEND_URL') . '/callback.php' : 'http://localhost/callback.php'
 );
 $client->addScope(['openid', 'email', 'profile']);
 
