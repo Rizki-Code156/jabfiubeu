@@ -1,3 +1,59 @@
+:root {
+  --primary: #001b7d;
+  --accent: #ffbf00;
+  --text: #171717;
+  --muted: #6c6c73;
+  --border: #d9dce5;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  background: #f4f4f4;
+  scroll-padding-top: 100px;
+}
+
+body {
+  margin: 0;
+  background: #f4f4f4;
+  color: var(--text);
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+iconify-icon {
+  flex: 0 0 auto;
+}
+
+.page-container {
+  width: min(1440px, 100%);
+  min-height: calc(100vh - 84px);
+  margin: 84px auto 24px;
+  padding: 28px clamp(18px, 3vw, 40px) 36px;
+  background: #fff;
+  border: 1px solid #d5d5d5;
+  border-top: 0;
+  border-radius: 0 0 24px 24px;
+}
+
+.detail-content {
+  display: grid;
+  gap: 24px;
+}
+
+.detail-content[hidden] {
+  display: none !important;
+}
+
 /* Styling Tombol Harga Biru di Atas (Sesuai Figma) */
 .price-badge {
   display: inline-flex !important;
@@ -18,40 +74,54 @@
 /* Penyesuaian Grid Detail */
 .detail-grid {
   display: grid;
-  grid-template-columns: 460px 1fr;
-  gap: 40px;
-  align-items: start;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(20px, 3vw, 40px);
+  align-items: center;
   width: 100%;
+}
+
+.detail-left-col,
+.detail-right-col {
+  min-width: 0;
 }
 
 .food-detail-photo {
   width: 100%;
-  height: 340px;
+  height: auto;
+  aspect-ratio: 1.9 / 1;
+  max-height: 380px;
   object-fit: cover;
-  border-radius: 16px;
-  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  object-position: center;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 10%);
   display: block;
 }
 
 .food-detail-title {
-  font-size: 38px;
+  font-size: clamp(24px, 2.4vw, 34px);
   font-weight: 700;
-  color: #000000;
+  color: #000;
   line-height: 1.2;
-  margin-bottom: 16px;
+  margin: 0 0 10px;
 }
 
 .food-description {
-  font-size: 15px;
-  line-height: 1.6;
+  font-size: 14px;
+  line-height: 1.5;
   color: #444;
-  margin-bottom: 24px;
+  margin: 0 0 16px;
 }
 
 .food-location-wrapper {
   display: flex;
   align-items: center;
   gap: 8px;
+  min-width: 0;
+  flex: 1;
+}
+
+.food-location-wrapper span {
+  overflow-wrap: anywhere;
 }
 
 .food-location-wrapper iconify-icon {
@@ -64,14 +134,14 @@
   font-size: 18px;
   font-weight: 700;
   color: #000000;
-  margin-bottom: 12px;
+  margin: 0 0 10px;
 }
 
 .info-item {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 15px;
+  font-size: 14px;
   color: #333;
 }
 
@@ -84,10 +154,10 @@
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  padding: 12px 32px;
+  padding: 10px 24px;
   background: var(--primary);
   color: #ffffff;
-  border-radius: 8px;
+  border-radius: 4px;
   text-decoration: none;
   font-size: 15px;
   font-weight: 500;
@@ -95,18 +165,102 @@
   white-space: nowrap;
 }
 
-/* Styling Bintang Interaktif Kotak Kiri */
-.direct-star-option {
-  transition: transform 0.15s ease, color 0.15s ease;
-  user-select: none;
+.rating-summary {
+  display: grid;
+  grid-template-columns: minmax(150px, 0.8fr) minmax(140px, 0.8fr) minmax(200px, 1.4fr);
+  align-items: center;
+  gap: clamp(16px, 3vw, 40px);
+  min-height: 136px;
+  padding: 18px clamp(18px, 4vw, 42px);
+  border-radius: 28px;
+  background: var(--primary);
+  color: #fff;
 }
 
-.direct-star-option:hover {
-  transform: scale(1.15);
+.rating-summary-title {
+  margin: 0;
+  padding-right: 20px;
+  border-right: 2px solid #fff;
+  font-size: clamp(18px, 2vw, 24px);
+  line-height: 1.2;
+  text-align: center;
 }
 
-.direct-star-option.active {
-  color: #ffbf00 !important;
+.rating-summary-score {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+}
+
+.rating-summary-score strong {
+  font-size: 24px;
+  line-height: 1;
+}
+
+.rating-summary-score > span {
+  color: #e5e8f4;
+  font-size: 12px;
+}
+
+.stars {
+  display: flex;
+  gap: 2px;
+  color: var(--accent);
+  font-size: 20px;
+}
+
+.rating-distribution {
+  display: grid;
+  gap: 5px;
+}
+
+.rating-distribution-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 14px;
+  align-items: center;
+  gap: 8px;
+  color: #fff;
+  font-size: 11px;
+}
+
+.rating-bar-track {
+  display: block;
+  height: 10px;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #d9d9d9;
+}
+
+.rating-bar-track > span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--accent);
+  transition: width 0.2s ease;
+}
+
+.review-section {
+  margin-top: 0;
+  padding: 14px 20px 16px;
+  border: 1px solid #d0d0d0;
+  border-radius: 24px;
+  background: #fff;
+  box-shadow: 0 2px 6px rgb(0 0 0 / 8%);
+}
+
+.review-section-title {
+  width: min(100%, 380px);
+  margin: 0 auto 12px;
+  padding-bottom: 7px;
+  border-bottom: 1px solid #d7dced;
+  color: #111;
+  font-size: 15px;
+  text-align: center;
+}
+
+#reviewsContainer {
+  min-width: 0;
 }
 
 /* Toast Notifikasi Bookmark */
@@ -194,129 +348,600 @@
 
 /* Formulir Ulasan & Pratinjau Foto */
 .review-form {
-  background: #f9f9f9;
-  border: 1px solid #d7dced;
-  border-radius: 16px;
-  padding: 24px;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 16px 14px 14px;
   font-family: "Inter", sans-serif;
 }
 
-.review-rating-fieldset {
-  border: none;
+.review-form[hidden] {
+  display: none;
+}
+
+.review-composer {
+  display: grid;
+  justify-items: center;
+  margin-top: -10px;
+}
+
+.review-composer[hidden] {
+  display: none !important;
+}
+
+.review-composer.expanded {
+  display: block;
+  width: 100%;
+  padding: 8px 0 10px;
+  border: 1px solid #9caddb;
+  border-radius: 5px;
+}
+
+.review-form-toggle-wrap {
+  position: relative;
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  padding: 0 40px;
+}
+
+.review-form-toggle {
+  display: inline-flex;
+  width: min(310px, 100%);
+  min-height: 28px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 3px 8px;
+  color: #001b7d;
+  background: #fff;
+  border: 0;
+  border-bottom: 1px solid #9caddb;
+  border-radius: 0;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.review-form-toggle iconify-icon {
+  font-size: 18px;
+}
+
+.review-form-close {
+  position: absolute;
+  top: -4px;
+  right: 10px;
+  display: none;
+  width: 24px;
+  height: 24px;
+  place-items: center;
   padding: 0;
-  margin: 0 0 16px 0;
+  border: 0;
+  background: transparent;
+  color: #171717;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.review-composer.expanded .review-form-close {
+  display: grid;
+}
+
+.review-form-close:focus-visible {
+  outline: 2px solid #001b7d;
+  outline-offset: 2px;
+}
+
+.review-composer.expanded .review-form {
+  padding: 14px 32px 0;
+}
+
+.review-feedback {
+  display: flex;
+  min-height: 28px;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin: 14px 0 0;
+  padding: 6px 12px;
+  border: 0;
+  border-radius: 6px;
+  background: #001b7d;
+  color: #fff;
+  font-size: 9px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.review-feedback iconify-icon {
+  font-size: 13px;
+}
+
+.review-feedback[hidden] {
+  display: none !important;
+}
+
+.review-feedback button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.review-feedback button[hidden] {
+  display: none;
+}
+
+.review-feedback button:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+.review-delete-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgb(0 0 0 / 28%);
+  pointer-events: auto;
+}
+
+.review-delete-overlay[hidden],
+.review-delete-result[hidden] {
+  display: none !important;
+}
+
+.review-delete-dialog {
+  position: relative;
+  z-index: 1;
+  width: min(280px, 100%);
+  min-height: 112px;
+  padding: 18px 22px 14px;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 4px 16px rgb(0 0 0 / 14%);
+}
+
+.review-delete-message {
+  margin: 8px 0 20px;
+  color: var(--primary);
+  font-size: 15px;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.review-delete-actions {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+}
+
+.review-delete-actions button {
+  position: relative;
+  z-index: 1;
+  min-width: 62px;
+  min-height: 28px;
+  padding: 5px 12px;
+  border: 0;
+  font: inherit;
+  font-size: 11px;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.review-delete-cancel {
+  background: #d9d9d9;
+  color: var(--primary);
+}
+
+.review-delete-confirm {
+  background: var(--primary);
+  color: #fff;
+}
+
+.review-delete-actions button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.review-delete-result {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.review-delete-result > iconify-icon {
+  margin-bottom: 8px;
+  color: #28a745;
+  font-size: 20px;
+}
+
+.review-delete-result > iconify-icon.is-error {
+  color: #ed3028;
+}
+
+.review-delete-result .review-delete-message {
+  margin: 0;
+  font-size: 13px;
+}
+
+.review-delete-detail {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.4;
+  text-align: center;
+}
+
+.review-delete-detail[hidden] {
+  display: none;
+}
+
+.review-delete-result-action {
+  position: relative;
+  z-index: 1;
+  align-self: flex-end;
+  margin-top: 16px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--primary);
+  font: inherit;
+  font-size: 11px;
+  text-decoration: underline;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.review-delete-dialog button:focus-visible {
+  outline: 2px solid rgb(0 27 125 / 45%);
+  outline-offset: 2px;
+}
+
+.review-card-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 3px 0 2px;
+  text-align: center;
+  font-family: "Inter", sans-serif;
+}
+
+.review-empty-title {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #111;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.review-empty-title iconify-icon {
+  font-size: 21px;
+  color: #111;
+}
+
+.review-empty-description {
+  max-width: 100%;
+  color: #333;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.review-form-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.review-form-main {
+  min-width: 0;
+}
+
+.review-form-main {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.review-rating-fieldset {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 0;
+  padding: 0;
+  margin: 0;
 }
 
 .review-form-label {
   display: block;
-  font-size: 14px;
-  font-weight: 600;
-  color: #000;
-  margin-bottom: 8px;
+  margin: 0;
+  color: #333;
+  font-size: 9px;
+  font-weight: 500;
+  white-space: nowrap;
 }
 
 .review-rating-inputs {
   display: flex;
-  gap: 6px;
+  justify-content: flex-start;
+  gap: 2px;
 }
 
 .review-rating-option {
   cursor: pointer;
-  font-size: 28px;
-  color: #ffbf00;
+  font-size: 23px;
+  color: #ff9f00;
+  line-height: 1;
 }
 
 .review-rating-option input {
   display: none;
 }
 
+.review-comment-row {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 9px;
+}
+
+.review-photo-control {
+  position: relative;
+  width: 23px;
+  height: 23px;
+  flex: 0 0 23px;
+}
+
+.review-photo-control.has-photo .review-photo-add {
+  display: none;
+}
+
+.review-form-main.has-photo .review-comment-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+}
+
+.review-form-main.has-photo .review-photo-control {
+  width: 74px;
+  height: 74px;
+}
+
+.review-form-main.has-photo .review-photo-preview {
+  position: relative;
+}
+
+.review-form-main.has-photo .review-form-meta {
+  padding-left: 0;
+}
+
 .review-form textarea {
   width: 100%;
-  padding: 12px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
+  min-width: 0;
+  height: 28px;
+  min-height: 28px;
+  padding: 6px 10px;
+  border: 1px solid #b9b9b9;
+  border-radius: 14px;
   font-family: "Inter", sans-serif;
-  font-size: 14px;
-  resize: vertical;
+  font-size: 10px;
+  line-height: 1.4;
+  resize: none;
 }
 
 .review-form-meta {
   display: flex;
-  justify-content: space-between;
-  font-size: 12px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  min-height: 14px;
+  padding-left: 31px;
+  font-size: 7px;
   color: #666;
-  margin-top: 4px;
-  margin-bottom: 12px;
 }
 
-.review-photo-controls {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 13px;
-  color: #555;
-  margin-bottom: 12px;
+.review-form-message {
+  color: #b42318;
+}
+
+.review-character-hint {
+  color: #333;
 }
 
 .review-photo-add {
-  width: 36px;
-  height: 36px;
-  background: #001b7d;
-  color: #fff;
-  border: none;
+  display: grid;
+  width: 23px;
+  height: 23px;
+  flex: 0 0 23px;
+  place-items: center;
+  padding: 0;
+  border: 0;
   border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  color: #fff;
+  background: #001b7d;
+  font-size: 14px;
   cursor: pointer;
 }
 
+.review-photo-add iconify-icon {
+  font-size: 17px;
+}
+
 .review-photo-preview {
-  position: relative;
-  width: 100px;
-  height: 100px;
-  margin-bottom: 12px;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.review-photo-preview[hidden] {
+  display: none;
 }
 
 .review-photo-preview img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 8px;
+  border-radius: 6px;
 }
 
 #removeReviewPhoto {
   position: absolute;
-  top: -6px;
-  right: -6px;
-  background: red;
+  top: -5px;
+  right: -5px;
+  background: #111;
   color: white;
   border: none;
   border-radius: 50%;
-  width: 22px;
-  height: 22px;
+  width: 16px;
+  height: 16px;
+  padding: 0;
   cursor: pointer;
-  font-weight: bold;
+  font-size: 12px;
+  line-height: 1;
 }
 
 .review-submit {
   background: #001b7d;
   color: #fff;
   border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-weight: 600;
+  min-width: 77px;
+  min-height: 19px;
+  padding: 3px 12px;
+  border-radius: 2px;
+  font-size: 9px;
+  font-weight: 500;
   cursor: pointer;
+}
+
+.review-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  width: 100%;
+  margin-top: -8px;
+}
+
+.review-submit:disabled {
+  opacity: 0.65;
+  cursor: wait;
 }
 
 .review-cancel {
   background: #e0e0e0;
   color: #333;
   border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-weight: 600;
+  padding: 3px 12px;
+  border-radius: 2px;
+  font-size: 9px;
+  font-weight: 500;
   cursor: pointer;
+}
+
+.review-cancel[hidden] {
+  display: none;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 640px) {
+  .page-container {
+    margin-top: 72px;
+    min-height: calc(100vh - 72px);
+    padding: 20px 14px 28px;
+    border-radius: 0 0 16px 16px;
+  }
+
+  .detail-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .food-detail-photo {
+    max-height: none;
+  }
+
+  .location-row {
+    align-items: flex-start !important;
+    gap: 12px;
+  }
+
+  .btn-location {
+    flex: 0 0 auto;
+    padding: 9px 12px;
+  }
+
+  .rating-summary {
+    grid-template-columns: 1fr 1fr;
+    gap: 18px 12px;
+    min-height: auto;
+    padding: 20px 16px;
+    border-radius: 20px;
+  }
+
+  .rating-summary-title {
+    padding-right: 12px;
+  }
+
+  .rating-distribution {
+    grid-column: 1 / -1;
+  }
+
+  .review-section {
+    padding: 13px 14px 15px;
+    border-radius: 20px;
+  }
+
+  .review-form-toggle-wrap {
+    margin-top: 0;
+  }
+
+  .review-form {
+    padding: 14px 12px;
+  }
+
+  .review-form-grid {
+    gap: 18px;
+  }
+
+  .review-rating-inputs {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 380px) {
+  .location-row {
+    flex-direction: column;
+  }
+
+  .btn-location {
+    align-self: stretch;
+  }
+
+  .review-form-toggle {
+    min-width: 0;
+    width: 100%;
+  }
 }
 
 /* Kartu Ulasan Pengguna */
@@ -329,23 +954,122 @@
   display: block;
 }
 
+.review-card {
+  position: relative;
+  margin-bottom: 8px;
+  padding: 10px;
+  border: 1px solid #dedede;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 10%);
+  font-family: "Inter", sans-serif;
+}
+
+.review-card-header {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 8px;
+  padding-right: 56px;
+}
+
+.review-user-avatar {
+  display: grid;
+  width: 25px;
+  height: 25px;
+  flex: 0 0 25px;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 50%;
+  background: #e4e6eb;
+  color: #001b7d;
+  font-size: 17px;
+}
+
+.review-user-details {
+  min-width: 0;
+}
+
+.review-user-name {
+  display: block;
+  overflow: hidden;
+  color: #333;
+  font-size: 9px;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.review-rating-date {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 1px;
+}
+
+.review-card-stars {
+  color: #ffbf00;
+  font-size: 12px;
+  letter-spacing: 1px;
+  line-height: 1;
+}
+
+.review-rating-date time {
+  color: #666;
+  font-size: 7px;
+}
+
+.review-card-comment {
+  margin: 8px 0 0;
+  color: #333;
+  font-size: 8px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.review-card .review-photo {
+  width: 42px;
+  height: 42px;
+  margin-top: 8px;
+  border-radius: 6px;
+}
+
 .review-owner-actions {
+  position: absolute;
+  top: 9px;
+  right: 10px;
+  z-index: 1;
   display: flex;
   gap: 8px;
-  margin-top: 8px;
 }
 
 .review-action {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 18px;
-  color: #555;
+  display: grid;
+  width: 18px;
+  height: 18px;
+  place-items: center;
   padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #001b7d;
+  color: #fff;
+  font-size: 11px;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.review-action iconify-icon {
+  font-size: 11px;
+  pointer-events: none;
 }
 
 .review-action:hover {
-  color: #001b7d;
+  background: #16399d;
+}
+
+.review-action:focus-visible {
+  outline: 2px solid #001b7d;
+  outline-offset: 2px;
 }
 
 /* Tampilan Error */
