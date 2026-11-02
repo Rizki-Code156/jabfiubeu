@@ -738,8 +738,7 @@
 
                 const supabaseClient = window.supabase.createClient(supabaseConfig.url, supabaseConfig.anonKey);
                 const extensionByType = { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp" };
-                const uniqueId = Date.now().toString(36) + Math.random().toString(36).substring(2, 10);
-                const photoPath = `ulasan/${uniqueId}.${extensionByType[selectedReviewPhoto.type]}`;
+                const photoPath = `ulasan/${Date.now()}_${(typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") ? crypto.randomUUID() : "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(c) { const r = (Math.random()*16)|0; return (c==="x"?r:(r&0x3)|0x8).toString(16); })}.${extensionByType[selectedReviewPhoto.type]}`;
                 const { error: uploadError } = await supabaseClient.storage.from(supabaseConfig.reviewPhotoBucket).upload(photoPath, selectedReviewPhoto, {
                   contentType: selectedReviewPhoto.type,
                   upsert: false,

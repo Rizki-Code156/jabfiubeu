@@ -1,6 +1,19 @@
 const PROFILE_API_BASE = window.PROFILE_API_BASE || window.BASE_URL || window.location.origin;
 const OFFLINE_ERROR = "Periksa koneksi internet anda.";
 const SERVER_CONNECTION_ERROR = "Server profil tidak dapat dihubungi. Pastikan Apache dan backend berjalan, lalu coba lagi.";
+
+// Fallback UUID generator — crypto.randomUUID() hanya tersedia di HTTPS/localhost
+function generateUUID() {
+  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+    return crypto.randomUUID();
+  }
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+    const r = (Math.random() * 16) | 0;
+    const v = c === "x" ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+}
+
 let currentProfile = null;
 let nameUpdateTimeout = null;
 let isProfilePhotoUploading = false;
@@ -509,8 +522,7 @@ async function handlePhotoFileSelection(event) {
     }
 
     const supabaseClient = window.supabase.createClient(supabaseConfig.url, supabaseConfig.anonKey);
-    const uniqueId = Date.now().toString(36) + Math.random().toString(36).substring(2, 10);
-    const photoPath = `profil/${currentProfile?.id_user || "pengguna"}/${uniqueId}.${extensionByType[file.type] || "img"}`;
+    const photoPath = `profil/${currentProfile?.id_user || "pengguna"}/${generateUUID()}.${extensionByType[file.type] || "img"}`;
     const { error: uploadError } = await supabaseClient.storage
       .from(supabaseConfig.profilePhotoBucket)
       .upload(photoPath, file, { contentType: file.type, upsert: false });
