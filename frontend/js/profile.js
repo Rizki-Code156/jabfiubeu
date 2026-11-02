@@ -621,6 +621,10 @@ async function confirmRemovePhoto() {
     document.getElementById("removePhotoResultDialog").hidden = false;
     document.getElementById("finishRemovePhotoButton").focus();
     document.getElementById("removePhotoButton").disabled = false;
+  } finally {
+    confirmBtn.disabled = false;
+    cancelBtn.disabled = false;
+  }
 }
 
 function setProfilePhoto(photoUrl) {
