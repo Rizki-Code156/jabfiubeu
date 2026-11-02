@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/../env.php';
+configureSession();
 session_start();
 require_once __DIR__ . '/../config/database.php';
 
@@ -110,11 +112,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 u.komentar  AS review_text,
                 u.foto_url,
                 u.tanggal   AS created_at,
+                us.nama     AS nama_user,
+                us.foto_profil,
                 k.nama_kuliner,
                 tk.nama_tempat,
                 tk.alamat,
                 tk.foto     AS photo_url
             FROM ulasan u
+            JOIN users us ON u.id_user = us.id_user
             JOIN tempat_kuliner tk ON u.id_tempat = tk.id_tempat
             JOIN kuliner k ON tk.id_kuliner = k.id_kuliner
             WHERE u.id_user = $1

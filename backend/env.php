@@ -39,6 +39,24 @@ function loadEnv(string $path): void
 loadEnv(__DIR__ . '/../.env');
 
 /**
+ * Konfigurasi session cookie agar bisa dikirim cross-origin (SameSite=None).
+ * Dipanggil SEBELUM session_start() di setiap endpoint yang butuh session.
+ */
+function configureSession(): void
+{
+    $isSecure = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on';
+
+    session_set_cookie_params([
+        'lifetime' => 0,
+        'path'     => '/',
+        'domain'   => '',
+        'secure'   => $isSecure,
+        'httponly' => true,
+        'samesite' => $isSecure ? 'None' : 'Lax',
+    ]);
+}
+
+/**
  * Set CORS header berdasarkan origin request.
  * Untuk endpoint yang butuh credentials (session/cookie).
  *

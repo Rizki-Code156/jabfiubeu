@@ -1,8 +1,8 @@
 <?php
 
-session_start();
-
 require_once __DIR__ . '/../config/database.php';
+configureSession();
+session_start();
 
 header('Content-Type: application/json');
 setCorsHeaders();
