@@ -6,8 +6,9 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     container_name: abig_backend
-    ports:
-      - "80:80"
+    # Tidak expose port ke luar — hanya bisa diakses dari container frontend via proxy
+    expose:
+      - "80"
     environment:
       - FRONTEND_URL=${FRONTEND_URL}
       - BACKEND_URL=${BACKEND_URL}
@@ -25,7 +26,7 @@ services:
       dockerfile: Dockerfile
     container_name: abig_frontend
     ports:
-      - "3001:80"
+      - "80:80"
     environment:
       - BACKEND_URL=${BACKEND_URL}
     depends_on:
