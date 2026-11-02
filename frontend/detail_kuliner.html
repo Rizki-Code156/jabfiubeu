@@ -155,6 +155,7 @@
                   <span class="sr-only">5 bintang</span>
                 </label>
               </div>
+              <span id="reviewRatingMessage" class="review-form-message" role="alert" aria-live="polite" style="display:block;min-height:18px;font-size:13px;color:#b42318;margin-top:4px;"></span>
             </div>
             <div class="review-form-main">
               <input id="reviewPhotoInput" name="foto" type="file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" hidden />
@@ -740,6 +741,8 @@
             input.addEventListener("change", () => {
               updateSelectedRating();
               reviewFormMessage.textContent = "";
+              const ratingMsgEl = document.getElementById("reviewRatingMessage");
+              if (ratingMsgEl) ratingMsgEl.textContent = "";
             });
           });
 
@@ -785,9 +788,14 @@
             const rating = Number(reviewForm.querySelector('input[name="rating"]:checked')?.value || 0);
             if (rating < 1 || rating > 5) {
               reviewFormMessage.textContent = "Rating belum di isi";
+              const ratingMsg = document.getElementById("reviewRatingMessage");
+              if (ratingMsg) ratingMsg.textContent = "Rating belum di isi";
               reviewRatingInputs[0].focus();
               return;
             }
+            // Bersihkan pesan rating jika sudah valid
+            const ratingMsg = document.getElementById("reviewRatingMessage");
+            if (ratingMsg) ratingMsg.textContent = "";
             if (characterCount > 0 && characterCount < 5) {
               reviewFormMessage.textContent = "Ulasan harus berisi minimal 5 karakter.";
               reviewComment.focus();
