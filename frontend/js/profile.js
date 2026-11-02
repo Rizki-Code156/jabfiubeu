@@ -44,6 +44,9 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("uploadPhotoButton").addEventListener("click", requestPhotoFile);
   document.getElementById("replacePhotoButton").addEventListener("click", requestPhotoFile);
   document.getElementById("removePhotoButton").addEventListener("click", removeProfilePhoto);
+  document.getElementById("cancelRemovePhotoButton").addEventListener("click", closeRemovePhotoModal);
+  document.getElementById("confirmRemovePhotoButton").addEventListener("click", confirmRemovePhoto);
+  document.getElementById("finishRemovePhotoButton").addEventListener("click", closeRemovePhotoModal);
   document.getElementById("photoFileInput").addEventListener("change", handlePhotoFileSelection);
   document.getElementById("togglePasswordButton").addEventListener("click", togglePasswordEditor);
   document.getElementById("cancelPasswordEdit").addEventListener("click", closePasswordEditor);
@@ -554,18 +557,35 @@ async function handlePhotoFileSelection(event) {
 
 async function removeProfilePhoto() {
   closePhotoMenu();
-  if (!window.confirm("Apakah Anda yakin ingin menghapus foto profil?")) return;
+  // Tampilkan modal konfirmasi
+  const modal = document.getElementById("removePhotoModal");
+  document.getElementById("removePhotoConfirmDialog").hidden = false;
+  document.getElementById("removePhotoResultDialog").hidden = true;
+  modal.hidden = false;
+  document.getElementById("cancelRemovePhotoButton").focus();
+}
 
-  const button = document.getElementById("removePhotoButton");
-  const message = document.getElementById("photoActionMessage");
-  button.disabled = true;
-  message.hidden = true;
+function closeRemovePhotoModal() {
+  document.getElementById("removePhotoModal").hidden = true;
+  document.getElementById("removePhotoConfirmDialog").hidden = true;
+  document.getElementById("removePhotoResultDialog").hidden = true;
+}
+
+async function confirmRemovePhoto() {
+  const confirmBtn = document.getElementById("confirmRemovePhotoButton");
+  const cancelBtn = document.getElementById("cancelRemovePhotoButton");
+  confirmBtn.disabled = true;
+  cancelBtn.disabled = true;
+
   try {
+    const button = document.getElementById("removePhotoButton");
+    button.disabled = true;
+
     const response = await fetch(`${PROFILE_API_BASE}/api/profil.php`, {
       method: "PUT",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ foto_profil: "" }),
+      body: JSON.stringify({ foto_profil: null }),
     });
     const result = await response.json();
     if (!response.ok || !result.status || !result.data) {
@@ -573,12 +593,34 @@ async function removeProfilePhoto() {
     }
 
     renderProfile(result.data);
-    showMessage(message, "Foto profil berhasil dihapus.", "success");
-  } catch (requestError) {
-    showMessage(message, getRequestErrorMessage(requestError, "Gagal menghapus foto profil."), "error");
-  } finally {
+
+    // Tampilkan dialog sukses
+    const icon = document.getElementById("removePhotoResultIcon");
+    const msg = document.getElementById("removePhotoResultMessage");
+    const sub = document.getElementById("removePhotoResultSub");
+    icon.className = "fa-solid fa-circle-check logout-success-icon";
+    icon.style.color = "";
+    msg.textContent = "Foto profil berhasil dihapus";
+    sub.hidden = true;
+    document.getElementById("removePhotoConfirmDialog").hidden = true;
+    document.getElementById("removePhotoResultDialog").hidden = false;
+    document.getElementById("finishRemovePhotoButton").focus();
     button.disabled = false;
-  }
+
+  } catch (err) {
+    // Tampilkan dialog gagal
+    const icon = document.getElementById("removePhotoResultIcon");
+    const msg = document.getElementById("removePhotoResultMessage");
+    const sub = document.getElementById("removePhotoResultSub");
+    icon.className = "fa-solid fa-circle-xmark logout-success-icon";
+    icon.style.color = "#e53e3e";
+    msg.textContent = "Foto profil gagal dihapus";
+    sub.textContent = getRequestErrorMessage(err, "Silakan coba lagi.");
+    sub.hidden = false;
+    document.getElementById("removePhotoConfirmDialog").hidden = true;
+    document.getElementById("removePhotoResultDialog").hidden = false;
+    document.getElementById("finishRemovePhotoButton").focus();
+    document.getElementById("removePhotoButton").disabled = false;
 }
 
 function setProfilePhoto(photoUrl) {
