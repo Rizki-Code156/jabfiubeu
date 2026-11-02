@@ -509,7 +509,8 @@ async function handlePhotoFileSelection(event) {
     }
 
     const supabaseClient = window.supabase.createClient(supabaseConfig.url, supabaseConfig.anonKey);
-    const photoPath = `profil/${currentProfile?.id_user || "pengguna"}/${crypto.randomUUID()}.${extensionByType[file.type] || "img"}`;
+    const uniqueId = Date.now().toString(36) + Math.random().toString(36).substring(2, 10);
+    const photoPath = `profil/${currentProfile?.id_user || "pengguna"}/${uniqueId}.${extensionByType[file.type] || "img"}`;
     const { error: uploadError } = await supabaseClient.storage
       .from(supabaseConfig.profilePhotoBucket)
       .upload(photoPath, file, { contentType: file.type, upsert: false });
