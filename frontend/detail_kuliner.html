@@ -787,7 +787,6 @@
             const characterCount = Array.from(komentar).length;
             const rating = Number(reviewForm.querySelector('input[name="rating"]:checked')?.value || 0);
             if (rating < 1 || rating > 5) {
-              reviewFormMessage.textContent = "Rating belum di isi";
               const ratingMsg = document.getElementById("reviewRatingMessage");
               if (ratingMsg) ratingMsg.textContent = "Rating belum di isi";
               reviewRatingInputs[0].focus();
