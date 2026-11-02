@@ -349,7 +349,10 @@
       }
 
    // 2. LOAD KULINER CARD
+   let _kulinerLoading = false;
    async function loadKuliner() {
+        if (_kulinerLoading) return;
+        _kulinerLoading = true;
         const foodGrid = document.getElementById("foodGrid");
         const loadingIndicator = document.getElementById("loadingIndicator");
         const emptyMessage = document.getElementById("emptyMessage");
@@ -420,9 +423,9 @@
         } finally {
           if (foodGrid) foodGrid.setAttribute("aria-busy", "false");
           if (loadingIndicator) loadingIndicator.style.display = "none";
+          _kulinerLoading = false;
         }
       }
-      // 3. FUNGSI RENDER KULINER
       function renderKuliner() {
         const foodGrid = document.getElementById("foodGrid");
         const emptyMessage = document.getElementById("emptyMessage");
