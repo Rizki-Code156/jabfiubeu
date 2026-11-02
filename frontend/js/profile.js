@@ -616,6 +616,8 @@ async function confirmRemovePhoto() {
     icon.style.color = "#e53e3e";
     msg.textContent = "Foto profil gagal dihapus";
     sub.textContent = getRequestErrorMessage(err, "Silakan coba lagi.");
+    sub.style.marginTop = "8px";
+    sub.style.display = "block";
     sub.hidden = false;
     document.getElementById("removePhotoConfirmDialog").hidden = true;
     document.getElementById("removePhotoResultDialog").hidden = false;

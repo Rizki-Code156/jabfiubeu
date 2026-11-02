@@ -1268,6 +1268,13 @@
 	white-space: nowrap;
 }
 
+.logout-success-dialog .logout-error-message {
+	margin-top: 8px;
+	font-size: 13px;
+	text-align: center;
+	color: #e53e3e;
+}
+
 .logout-success-button {
 	align-self: flex-end;
 	margin-top: 20px;
