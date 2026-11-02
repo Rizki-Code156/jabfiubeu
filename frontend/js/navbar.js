@@ -266,9 +266,10 @@ document.addEventListener("DOMContentLoaded", function () {
     localStorage.removeItem("role");
     localStorage.clear();
 
-    fetch(AUTH_API_BASE + "/api/logout.php", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+    fetch(AUTH_API_BASE + "/logout.php", {
+      method: "GET",
+      credentials: "include",
+      headers: { "X-Requested-With": "XMLHttpRequest" },
     })
       .catch((err) => console.error("Logout backend error:", err))
       .finally(() => {

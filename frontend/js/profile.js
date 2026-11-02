@@ -248,7 +248,7 @@ async function logout() {
     const response = await fetch(`${PROFILE_API_BASE}/logout.php`, {
       method: "GET",
       credentials: "include",
-      redirect: "follow",
+      headers: { "X-Requested-With": "XMLHttpRequest" },
     });
     if (!response.ok) throw new Error("Gagal mengakhiri sesi. Silakan coba lagi.");
     localStorage.clear();
