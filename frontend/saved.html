@@ -274,6 +274,7 @@
     <script src="js/config.js"></script>
     <script src="js/navbar.js?v=session-api"></script>
     <script>
+      document.addEventListener("DOMContentLoaded", () => {
         loadSavedFoods();
 
         document.getElementById("retryBtn").addEventListener("click", () => {
