@@ -1194,7 +1194,7 @@
 
 .logout-dialog {
 	position: relative;
-	width: min(278px, 100%);
+	width: min(360px, 100%);
 	min-height: 170px;
 	padding: 26px 26px 20px;
 	border: 0;
