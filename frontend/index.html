@@ -208,12 +208,6 @@
         </div>
       </section>
 
-      <section class="recommendations-section" aria-labelledby="recommendationsTitle" hidden style="display:none !important;">
-        <h2 class="recommendations-title" id="recommendationsTitle">Rekomendasi Kuliner</h2>
-        <p class="recommendations-status" id="recommendationsStatus" role="status" aria-live="polite">Memuat rekomendasi...</p>
-        <div class="food-grid" id="recommendationsGrid" hidden></div>
-      </section>
-
       <!-- Daftar Kuliner -->
       <section class="food-grid" id="foodGrid" aria-label="Daftar kuliner">
         <div id="loadingIndicator" style="display: none; text-align: center; padding: 20px">Loading...</div>
@@ -778,7 +772,6 @@
 
         loadKategori();
         loadKuliner();
-        loadRecommendations();
         checkGoogleLoginSession();
       });
     </script>
