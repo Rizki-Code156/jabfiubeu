@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "Mangan Yukkk API",
-    "description": "Collection untuk testing semua API Mangan Yukkk",
+    "description": "Collection untuk testing semua API Mangan Yukkk dengan automation tests",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
@@ -17,6 +17,30 @@
       "item": [
         {
           "name": "Register - Sukses",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 201', function() {",
+                  "  pm.response.to.have.status(201);",
+                  "});",
+                  "pm.test('Response has status true', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.status).to.be.true;",
+                  "});",
+                  "pm.test('Response has message', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.message).to.eql('Pendaftaran berhasil.');",
+                  "});",
+                  "pm.test('Content-Type is application/json', function() {",
+                  "  pm.response.to.have.header('Content-Type');",
+                  "  pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "url": "{{BASE_URL}}/api/register.php",
@@ -29,6 +53,26 @@
         },
         {
           "name": "Register - Email Duplikat",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 409', function() {",
+                  "  pm.response.to.have.status(409);",
+                  "});",
+                  "pm.test('Response has status false', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.status).to.be.false;",
+                  "});",
+                  "pm.test('Response has duplicate email message', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.message).to.include('sudah terdaftar');",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "url": "{{BASE_URL}}/api/register.php",
@@ -41,6 +85,26 @@
         },
         {
           "name": "Register - Field Kosong",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 400', function() {",
+                  "  pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test('Response has status false', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.status).to.be.false;",
+                  "});",
+                  "pm.test('Response has validation message', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.message).to.eql('Semua kolom wajib diisi');",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "url": "{{BASE_URL}}/api/register.php",
@@ -52,19 +116,23 @@
           }
         },
         {
-          "name": "Register - Bukan Gmail",
-          "request": {
-            "method": "POST",
-            "url": "{{BASE_URL}}/api/register.php",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"nama\": \"Test\",\n  \"email\": \"test@yahoo.com\",\n  \"password\": \"password123\",\n  \"konfirmasi_password\": \"password123\"\n}"
-            }
-          }
-        },
-        {
           "name": "Register - Password Tidak Cocok",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 400', function() {",
+                  "  pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test('Response has password mismatch message', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.message).to.eql('Konfirmasi kata sandi tidak cocok');",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "url": "{{BASE_URL}}/api/register.php",
@@ -77,6 +145,38 @@
         },
         {
           "name": "Login - Sukses User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function() {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Response has status true', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.status).to.be.true;",
+                  "});",
+                  "pm.test('Response has role user', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.role).to.eql('user');",
+                  "});",
+                  "pm.test('Response data has id_user', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.data).to.have.property('id_user');",
+                  "});",
+                  "pm.test('Response data has nama', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.data).to.have.property('nama');",
+                  "});",
+                  "pm.test('Response data has email', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.data).to.have.property('email');",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "url": "{{BASE_URL}}/api/login.php",
@@ -89,6 +189,26 @@
         },
         {
           "name": "Login - Password Salah",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 401', function() {",
+                  "  pm.response.to.have.status(401);",
+                  "});",
+                  "pm.test('Response has status false', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.status).to.be.false;",
+                  "});",
+                  "pm.test('Response has wrong credential message', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.message).to.eql('Email atau kata sandi salah');",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "url": "{{BASE_URL}}/api/login.php",
@@ -101,6 +221,22 @@
         },
         {
           "name": "Login - Field Kosong",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 400', function() {",
+                  "  pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test('Response has validation message', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.message).to.eql('Email dan kata sandi wajib diisi');",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "url": "{{BASE_URL}}/api/login.php",
@@ -113,6 +249,32 @@
         },
         {
           "name": "Me - Cek Sesi",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200 or 401', function() {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200, 401]);",
+                  "});",
+                  "pm.test('Response has status field', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json).to.have.property('status');",
+                  "});",
+                  "if (pm.response.code === 200) {",
+                  "  pm.test('Response has role field', function() {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('role');",
+                  "  });",
+                  "  pm.test('Response has data field', function() {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('data');",
+                  "  });",
+                  "}"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "url": "{{BASE_URL}}/api/me.php"
@@ -125,6 +287,38 @@
       "item": [
         {
           "name": "Get Semua Kuliner",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function() {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Response has status true', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.status).to.be.true;",
+                  "});",
+                  "pm.test('Response has data array', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.data).to.be.an('array');",
+                  "});",
+                  "pm.test('Data is not empty', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.data.length).to.be.above(0);",
+                  "});",
+                  "pm.test('Each item has id_kuliner', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.data[0]).to.have.property('id_kuliner');",
+                  "});",
+                  "pm.test('Each item has nama_kuliner', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.data[0]).to.have.property('nama_kuliner');",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "url": "{{BASE_URL}}/api/kuliner.php"
@@ -132,6 +326,31 @@
         },
         {
           "name": "Get Kategori",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function() {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Response has status true', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.status).to.be.true;",
+                  "});",
+                  "pm.test('Response has data array', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.data).to.be.an('array');",
+                  "});",
+                  "pm.test('Each item has id_kategori and nama_kategori', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.data[0]).to.have.property('id_kategori');",
+                  "  pm.expect(json.data[0]).to.have.property('nama_kategori');",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "url": "{{BASE_URL}}/api/kategori.php"
@@ -139,6 +358,35 @@
         },
         {
           "name": "Get Tempat Kuliner",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function() {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Response has status true', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.status).to.be.true;",
+                  "});",
+                  "pm.test('Response has data array', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.data).to.be.an('array');",
+                  "});",
+                  "pm.test('Each item has latitude and longitude', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.data[0]).to.have.property('latitude');",
+                  "  pm.expect(json.data[0]).to.have.property('longitude');",
+                  "});",
+                  "pm.test('Each item has harga', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.data[0]).to.have.property('harga');",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "url": "{{BASE_URL}}/api/tempat_kuliner.php"
@@ -146,6 +394,38 @@
         },
         {
           "name": "Detail Kuliner - ID Valid",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function() {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Response has status true', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.status).to.be.true;",
+                  "});",
+                  "pm.test('Response has data object', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.data).to.be.an('object');",
+                  "});",
+                  "pm.test('Response has ulasan array', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.ulasan).to.be.an('array');",
+                  "});",
+                  "pm.test('Data has rata_rata_rating', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.data).to.have.property('rata_rata_rating');",
+                  "});",
+                  "pm.test('Data has nama_kuliner', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.data).to.have.property('nama_kuliner');",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "url": {
@@ -156,6 +436,26 @@
         },
         {
           "name": "Detail Kuliner - ID Tidak Valid",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 400', function() {",
+                  "  pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test('Response has status false', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.status).to.be.false;",
+                  "});",
+                  "pm.test('Response has invalid ID message', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.message).to.eql('ID kuliner tidak valid');",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "url": {
@@ -166,6 +466,22 @@
         },
         {
           "name": "Detail Kuliner - ID Tidak Ada",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 404', function() {",
+                  "  pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test('Response has not found message', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.message).to.eql('Detail kuliner tidak ditemukan');",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "url": {
@@ -176,6 +492,32 @@
         },
         {
           "name": "Filter Kuliner - Makanan Berat",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function() {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Response has status true', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.status).to.be.true;",
+                  "});",
+                  "pm.test('Response has data array', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.data).to.be.an('array');",
+                  "});",
+                  "pm.test('All results have correct category', function() {",
+                  "  var json = pm.response.json();",
+                  "  json.data.forEach(function(item) {",
+                  "    pm.expect(item.nama_kategori.toLowerCase()).to.include('makanan berat');",
+                  "  });",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "url": {
@@ -186,6 +528,22 @@
         },
         {
           "name": "Filter Kuliner - Kategori Kosong",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 400', function() {",
+                  "  pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test('Response has validation message', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.message).to.eql('Pilih kategori terlebih dahulu');",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "url": {
@@ -196,6 +554,30 @@
         },
         {
           "name": "Search - Ada Hasil",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function() {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Response has status true', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.status).to.be.true;",
+                  "});",
+                  "pm.test('Response has data array', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.data).to.be.an('array');",
+                  "});",
+                  "pm.test('Data is not empty', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.data.length).to.be.above(0);",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "url": {
@@ -206,6 +588,27 @@
         },
         {
           "name": "Search - Tidak Ada Hasil",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function() {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Response has empty data', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.data).to.be.an('array');",
+                  "  pm.expect(json.data.length).to.eql(0);",
+                  "});",
+                  "pm.test('Response has message', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json).to.have.property('message');",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "url": {
@@ -216,6 +619,22 @@
         },
         {
           "name": "Search - Kata Kunci Kosong",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 400', function() {",
+                  "  pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test('Response has validation message', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.message).to.eql('Kata kunci pencarian tidak boleh kosong');",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "url": {
@@ -226,6 +645,28 @@
         },
         {
           "name": "Rekomendasi Kuliner",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function() {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Response has status true', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.status).to.be.true;",
+                  "});",
+                  "pm.test('Data max 10 items', function() {",
+                  "  var json = pm.response.json();",
+                  "  if (json.data) {",
+                  "    pm.expect(json.data.length).to.be.at.most(10);",
+                  "  }",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "url": "{{BASE_URL}}/api/rekomendasi.php"
@@ -238,6 +679,28 @@
       "item": [
         {
           "name": "GET Daftar Favorit",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200 or 401', function() {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200, 401]);",
+                  "});",
+                  "pm.test('Response has status field', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json).to.have.property('status');",
+                  "});",
+                  "if (pm.response.code === 200) {",
+                  "  pm.test('Response has data array', function() {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.data).to.be.an('array');",
+                  "  });",
+                  "}"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "url": "{{BASE_URL}}/api/favorit.php"
@@ -245,18 +708,28 @@
         },
         {
           "name": "POST Simpan Favorit - Sukses",
-          "request": {
-            "method": "POST",
-            "url": "{{BASE_URL}}/api/favorit.php",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"id_tempat\": 9\n}"
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 201 or 401 or 409', function() {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([201, 401, 409]);",
+                  "});",
+                  "if (pm.response.code === 201) {",
+                  "  pm.test('Response has id_favorit', function() {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('id_favorit');",
+                  "  });",
+                  "  pm.test('Response has success message', function() {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.message).to.eql('Kuliner berhasil disimpan ke favorit');",
+                  "  });",
+                  "}"
+                ]
+              }
             }
-          }
-        },
-        {
-          "name": "POST Simpan Favorit - Duplikat",
+          ],
           "request": {
             "method": "POST",
             "url": "{{BASE_URL}}/api/favorit.php",
@@ -269,6 +742,24 @@
         },
         {
           "name": "POST Simpan Favorit - ID Tidak Valid",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 400 or 401', function() {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([400, 401]);",
+                  "});",
+                  "if (pm.response.code === 400) {",
+                  "  pm.test('Response has invalid ID message', function() {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.message).to.eql('ID tempat kuliner tidak valid');",
+                  "  });",
+                  "}"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "url": "{{BASE_URL}}/api/favorit.php",
@@ -281,6 +772,24 @@
         },
         {
           "name": "DELETE Hapus Favorit - Sukses",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200 or 401 or 404', function() {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200, 401, 404]);",
+                  "});",
+                  "if (pm.response.code === 200) {",
+                  "  pm.test('Response has success message', function() {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.message).to.eql('Kuliner berhasil dihapus dari favorit');",
+                  "  });",
+                  "}"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "DELETE",
             "url": "{{BASE_URL}}/api/favorit.php",
@@ -288,18 +797,6 @@
             "body": {
               "mode": "raw",
               "raw": "{\n  \"id_tempat\": 9\n}"
-            }
-          }
-        },
-        {
-          "name": "DELETE Hapus Favorit - Tidak Ada",
-          "request": {
-            "method": "DELETE",
-            "url": "{{BASE_URL}}/api/favorit.php",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"id_tempat\": 9999\n}"
             }
           }
         }
@@ -310,6 +807,36 @@
       "item": [
         {
           "name": "GET Ulasan Per Kuliner",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function() {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Response has status true', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.status).to.be.true;",
+                  "});",
+                  "pm.test('Response has data array', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.data).to.be.an('array');",
+                  "});",
+                  "if (pm.response.json().data.length > 0) {",
+                  "  pm.test('Each ulasan has nama_user', function() {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.data[0]).to.have.property('nama_user');",
+                  "  });",
+                  "  pm.test('Each ulasan has review_text', function() {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.data[0]).to.have.property('review_text');",
+                  "  });",
+                  "}"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "url": {
@@ -320,6 +847,30 @@
         },
         {
           "name": "GET Ulasan Pribadi",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200 or 401', function() {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200, 401]);",
+                  "});",
+                  "if (pm.response.code === 200) {",
+                  "  pm.test('Response has data array', function() {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.data).to.be.an('array');",
+                  "  });",
+                  "  if (pm.response.json().data.length > 0) {",
+                  "    pm.test('Each ulasan has nama_user', function() {",
+                  "      var json = pm.response.json();",
+                  "      pm.expect(json.data[0]).to.have.property('nama_user');",
+                  "    });",
+                  "  }",
+                  "}"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "url": {
@@ -329,31 +880,25 @@
           }
         },
         {
-          "name": "POST Tambah Ulasan - Sukses",
-          "request": {
-            "method": "POST",
-            "url": "{{BASE_URL}}/api/ulasan.php",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"id_tempat\": 9,\n  \"rating\": 5,\n  \"komentar\": \"Enak banget rasanya!\",\n  \"foto_url\": \"\"\n}"
+          "name": "POST Tambah Ulasan - Komentar Pendek",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 400 or 401', function() {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([400, 401]);",
+                  "});",
+                  "if (pm.response.code === 400) {",
+                  "  pm.test('Response has min length message', function() {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.message).to.eql('Komentar minimal 5 karakter');",
+                  "  });",
+                  "}"
+                ]
+              }
             }
-          }
-        },
-        {
-          "name": "POST Tambah Ulasan - Rating Saja",
-          "request": {
-            "method": "POST",
-            "url": "{{BASE_URL}}/api/ulasan.php",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"id_tempat\": 10,\n  \"rating\": 4\n}"
-            }
-          }
-        },
-        {
-          "name": "POST Tambah Ulasan - Komentar Terlalu Pendek",
+          ],
           "request": {
             "method": "POST",
             "url": "{{BASE_URL}}/api/ulasan.php",
@@ -365,38 +910,36 @@
           }
         },
         {
-          "name": "PUT Ubah Ulasan - Sukses",
-          "request": {
-            "method": "PUT",
-            "url": "{{BASE_URL}}/api/ulasan.php",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"id_ulasan\": 1,\n  \"rating\": 4,\n  \"komentar\": \"Lumayan enak sih\"\n}"
+          "name": "POST Tambah Ulasan - Sukses",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 201 or 401 or 409', function() {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([201, 401, 409]);",
+                  "});",
+                  "if (pm.response.code === 201) {",
+                  "  pm.test('Response has id_ulasan', function() {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('id_ulasan');",
+                  "  });",
+                  "  pm.test('Response has success message', function() {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.message).to.eql('Ulasan berhasil disimpan');",
+                  "  });",
+                  "}"
+                ]
+              }
             }
-          }
-        },
-        {
-          "name": "DELETE Hapus Ulasan - Sukses",
+          ],
           "request": {
-            "method": "DELETE",
+            "method": "POST",
             "url": "{{BASE_URL}}/api/ulasan.php",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"id_ulasan\": 1\n}"
-            }
-          }
-        },
-        {
-          "name": "DELETE Hapus Ulasan - Bukan Milik Sendiri",
-          "request": {
-            "method": "DELETE",
-            "url": "{{BASE_URL}}/api/ulasan.php",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"id_ulasan\": 9999\n}"
+              "raw": "{\n  \"id_tempat\": 9,\n  \"rating\": 5,\n  \"komentar\": \"Enak banget rasanya!\"\n}"
             }
           }
         }
@@ -407,6 +950,28 @@
       "item": [
         {
           "name": "GET Statistik Rating",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200 or 401', function() {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200, 401]);",
+                  "});",
+                  "if (pm.response.code === 200) {",
+                  "  pm.test('Response has rata_rata_rating', function() {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.data).to.have.property('rata_rata_rating');",
+                  "  });",
+                  "  pm.test('Response has jumlah_rating', function() {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.data).to.have.property('jumlah_rating');",
+                  "  });",
+                  "}"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "url": {
@@ -416,19 +981,25 @@
           }
         },
         {
-          "name": "POST Simpan Rating Baru",
-          "request": {
-            "method": "POST",
-            "url": "{{BASE_URL}}/api/rating.php",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"id_tempat\": 9,\n  \"rating\": 5\n}"
-            }
-          }
-        },
-        {
           "name": "POST Rating - Nilai Tidak Valid",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 400 or 401', function() {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([400, 401]);",
+                  "});",
+                  "if (pm.response.code === 400) {",
+                  "  pm.test('Response has invalid rating message', function() {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.message).to.eql('Rating harus bilangan bulat antara 1 sampai 5');",
+                  "  });",
+                  "}"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "url": "{{BASE_URL}}/api/rating.php",
@@ -436,30 +1007,6 @@
             "body": {
               "mode": "raw",
               "raw": "{\n  \"id_tempat\": 9,\n  \"rating\": 6\n}"
-            }
-          }
-        },
-        {
-          "name": "PUT Ubah Rating",
-          "request": {
-            "method": "PUT",
-            "url": "{{BASE_URL}}/api/rating.php",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"id_ulasan\": 1,\n  \"rating\": 4\n}"
-            }
-          }
-        },
-        {
-          "name": "DELETE Hapus Rating",
-          "request": {
-            "method": "DELETE",
-            "url": "{{BASE_URL}}/api/rating.php",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"id_ulasan\": 1\n}"
             }
           }
         }
@@ -470,61 +1017,57 @@
       "item": [
         {
           "name": "GET Profil",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200 or 401', function() {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200, 401]);",
+                  "});",
+                  "if (pm.response.code === 200) {",
+                  "  pm.test('Response has data with nama', function() {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.data).to.have.property('nama');",
+                  "  });",
+                  "  pm.test('Response has data with email', function() {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.data).to.have.property('email');",
+                  "  });",
+                  "  pm.test('Response has data with foto_profil', function() {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.data).to.have.property('foto_profil');",
+                  "  });",
+                  "}"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "url": "{{BASE_URL}}/api/profil.php"
           }
         },
         {
-          "name": "PUT Ubah Nama",
-          "request": {
-            "method": "PUT",
-            "url": "{{BASE_URL}}/api/profil.php",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"nama\": \"Nama Baru\"\n}"
-            }
-          }
-        },
-        {
-          "name": "PUT Ubah Foto Profil",
-          "request": {
-            "method": "PUT",
-            "url": "{{BASE_URL}}/api/profil.php",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"foto_profil\": \"https://kppeplufcluygonkolou.supabase.co/storage/v1/object/public/foto-profil/test.jpg\"\n}"
-            }
-          }
-        },
-        {
-          "name": "POST Ubah Kata Sandi - Sukses",
-          "request": {
-            "method": "POST",
-            "url": "{{BASE_URL}}/api/profil.php",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"password_lama\": \"password123\",\n  \"password_baru\": \"newpassword123\",\n  \"konfirmasi_baru\": \"newpassword123\"\n}"
-            }
-          }
-        },
-        {
-          "name": "POST Ubah Kata Sandi - Password Lama Salah",
-          "request": {
-            "method": "POST",
-            "url": "{{BASE_URL}}/api/profil.php",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"password_lama\": \"salah123\",\n  \"password_baru\": \"newpassword123\",\n  \"konfirmasi_baru\": \"newpassword123\"\n}"
-            }
-          }
-        },
-        {
           "name": "POST Ubah Kata Sandi - Terlalu Pendek",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 400 or 401', function() {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([400, 401]);",
+                  "});",
+                  "if (pm.response.code === 400) {",
+                  "  pm.test('Response has min length message', function() {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.message).to.eql('Kata sandi baru minimal 8 karakter');",
+                  "  });",
+                  "}"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "url": "{{BASE_URL}}/api/profil.php",
@@ -533,6 +1076,246 @@
               "mode": "raw",
               "raw": "{\n  \"password_lama\": \"password123\",\n  \"password_baru\": \"123\",\n  \"konfirmasi_baru\": \"123\"\n}"
             }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "Dashboard - Tanpa Login",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.cookies.clear();"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 401', function() {",
+                  "  pm.response.to.have.status(401);",
+                  "});",
+                  "pm.test('Response has status false', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.status).to.be.false;",
+                  "});",
+                  "pm.test('Response has login required message', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.message).to.eql('Anda harus login untuk mengakses halaman ini');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": "{{BASE_URL}}/api/admin/dashboard.php"
+          }
+        },
+        {
+          "name": "Login Admin - Sukses",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function() {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Response has status true', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.status).to.be.true;",
+                  "});",
+                  "pm.test('Response has role admin', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.role).to.eql('admin');",
+                  "});",
+                  "pm.test('Response data has id_admin', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.data).to.have.property('id_admin');",
+                  "});",
+                  "pm.test('Response data has nama', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.data).to.have.property('nama');",
+                  "});",
+                  "pm.test('Response data has email', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.data).to.have.property('email');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": "{{BASE_URL}}/api/login.php",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@gmail.com\",\n  \"password\": \"admin123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login Admin - Password Salah",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 401', function() {",
+                  "  pm.response.to.have.status(401);",
+                  "});",
+                  "pm.test('Response has status false', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.status).to.be.false;",
+                  "});",
+                  "pm.test('Response has wrong credential message', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.message).to.eql('Email atau kata sandi salah');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": "{{BASE_URL}}/api/login.php",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@gmail.com\",\n  \"password\": \"salah123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Dashboard - Dengan Login Admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function() {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Response has status true', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.status).to.be.true;",
+                  "});",
+                  "pm.test('Response has data object', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.data).to.be.an('object');",
+                  "});",
+                  "pm.test('Data has total_kuliner', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.data).to.have.property('total_kuliner');",
+                  "});",
+                  "pm.test('Data has total_tempat', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.data).to.have.property('total_tempat');",
+                  "});",
+                  "pm.test('Data has total_user', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.data).to.have.property('total_user');",
+                  "});",
+                  "pm.test('Data has total_ulasan', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.data).to.have.property('total_ulasan');",
+                  "});",
+                  "pm.test('Data has total_kategori', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.data).to.have.property('total_kategori');",
+                  "});",
+                  "pm.test('Data has rata_rata_rating', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.data).to.have.property('rata_rata_rating');",
+                  "});",
+                  "pm.test('Data has kuliner_populer', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.data).to.have.property('kuliner_populer');",
+                  "});",
+                  "pm.test('Data has ulasan_terbaru array', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.data.ulasan_terbaru).to.be.an('array');",
+                  "});",
+                  "pm.test('Data has user_terbaru array', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.data.user_terbaru).to.be.an('array');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": "{{BASE_URL}}/api/admin/dashboard.php"
+          }
+        },
+        {
+          "name": "Dashboard - Method Salah",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 405', function() {",
+                  "  pm.response.to.have.status(405);",
+                  "});",
+                  "pm.test('Response has status false', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.status).to.be.false;",
+                  "});",
+                  "pm.test('Response has method message', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(json.message).to.eql('Method harus GET');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": "{{BASE_URL}}/api/admin/dashboard.php",
+            "header": [{ "key": "Content-Type", "value": "application/json" }]
+          }
+        },
+        {
+          "name": "Dashboard - Login User Biasa (Akses Ditolak)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.cookies.clear();"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 403 or 401', function() {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([403, 401]);",
+                  "});",
+                  "if (pm.response.code === 403) {",
+                  "  pm.test('Response has access denied message', function() {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.message).to.eql('Akses ditolak. Halaman ini hanya untuk admin');",
+                  "  });",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": "{{BASE_URL}}/api/admin/dashboard.php"
           }
         }
       ]
