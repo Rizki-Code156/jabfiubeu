@@ -159,14 +159,25 @@
     summaryRetryButton.disabled = true;
 
     try {
-      const [culinaryResult, categoriesResult] = await Promise.all([
-        getJson(`${API_BASE_URL}/api/tempat_kuliner.php`),
-        getJson(`${API_BASE_URL}/api/kategori.php`),
-      ]);
-      if (!culinaryResult.status || !categoriesResult.status || !Array.isArray(culinaryResult.data) || !Array.isArray(categoriesResult.data)) {
-        throw new Error("Data dashboard dari server tidak valid.");
+      // Pakai satu endpoint dashboard yang return semua data sekaligus
+      const dashResult = await getJson(`${API_BASE_URL}/api/admin/dashboard.php`);
+      if (!dashResult.status || !dashResult.data) {
+        throw new Error(dashResult.message || "Data dashboard dari server tidak valid.");
       }
 
+      const data = dashResult.data;
+
+      document.getElementById("totalCulinary").textContent = numberFormatter.format(data.total_kuliner ?? 0);
+      document.getElementById("totalCategories").textContent = numberFormatter.format(data.total_kategori ?? 0);
+      document.getElementById("totalUsers").textContent = numberFormatter.format(data.total_user ?? 0);
+
+      // Ambil data kuliner untuk card grid
+      const culinaryResult = await getJson(`${API_BASE_URL}/api/tempat_kuliner.php`);
+      if (!culinaryResult.status || !Array.isArray(culinaryResult.data)) {
+        throw new Error("Data kuliner dari server tidak valid.");
+      }
+
+      // Ambil rating dari detail kuliner secara paralel
       const culinary = culinaryResult.data;
       const details = await Promise.all(culinary.map((item) =>
         getJson(`${API_BASE_URL}/api/detail_kuliner.php?id=${encodeURIComponent(item.id_tempat)}`).catch(() => null)
@@ -177,9 +188,6 @@
         return { ...item, rata_rata_rating: rating };
       });
 
-      document.getElementById("totalCulinary").textContent = numberFormatter.format(culinaryResult.data.length);
-      document.getElementById("totalCategories").textContent = numberFormatter.format(categoriesResult.data.length);
-      document.getElementById("totalUsers").textContent = "—";
       renderCulinaryCards(culinaryWithRatings);
 
       summaryCards.hidden = false;
