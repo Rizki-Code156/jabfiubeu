@@ -1,5 +1,5 @@
 (() => {
-  const API_BASE_URL = "http://localhost/ABIG-Anak-Buah-Ibu-Ghina-/backend";
+  const API_BASE_URL = window.BASE_URL || window.location.origin;
   const adminApp = document.getElementById("adminApp");
   const authState = document.getElementById("authState");
   const authMessage = document.getElementById("authMessage");
