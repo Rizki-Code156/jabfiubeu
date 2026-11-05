@@ -167,16 +167,14 @@
         throw new Error("Data dashboard dari server tidak valid.");
       }
 
-      const culinary = culinaryResult.data.slice(0, 3);
-      const details = await Promise.all(culinary.map((item) => getJson(
-        `${API_BASE_URL}/api/detail_kuliner.php?id=${encodeURIComponent(item.id_tempat)}`
-      )));
+      const culinary = culinaryResult.data;
+      const details = await Promise.all(culinary.map((item) =>
+        getJson(`${API_BASE_URL}/api/detail_kuliner.php?id=${encodeURIComponent(item.id_tempat)}`).catch(() => null)
+      ));
       const culinaryWithRatings = culinary.map((item, index) => {
         const detail = details[index];
-        if (!detail.status || !detail.data) {
-          throw new Error(detail.message || "Rating kuliner gagal dimuat.");
-        }
-        return { ...item, rata_rata_rating: detail.data.rata_rata_rating };
+        const rating = detail?.status && detail?.data ? detail.data.rata_rata_rating : 0;
+        return { ...item, rata_rata_rating: rating };
       });
 
       document.getElementById("totalCulinary").textContent = numberFormatter.format(culinaryResult.data.length);
