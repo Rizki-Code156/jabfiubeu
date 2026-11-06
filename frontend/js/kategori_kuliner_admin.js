@@ -1,135 +1,146 @@
-// Data Default Kategori Kuliner
-let dataKategori = JSON.parse(localStorage.getItem('adminKategoriData')) || [
-    { id: 1, nama: "Makanan Utama", icon: "dashicons:food", deskripsi: "Hidangan makanan berat khas daerah", jumlahItem: 12 },
-    { id: 2, nama: "Minuman", icon: "mdi:coffee", deskripsi: "Aneka ragam olahan minuman segar & hangat", jumlahItem: 8 },
-    { id: 3, nama: "Cemilan & Oleh-oleh", icon: "mdi:cookie", deskripsi: "Makanan ringan dan kudapan khas", jumlahItem: 15 }
-  ];
-  
-  // Element DOM
-  const tableBody = document.getElementById('kategori-table-body');
-  const searchInput = document.getElementById('search-input');
-  
-  const modal = document.getElementById('kategori-modal');
-  const modalTitle = document.getElementById('modal-title');
-  const form = document.getElementById('kategori-form');
-  
-  const btnTambah = document.getElementById('btn-tambah');
-  const btnCloseModal = document.getElementById('btn-close-modal');
-  const btnBatal = document.getElementById('btn-batal');
-  
-  // Render Tabel Kategori
-  function renderTable(data = dataKategori) {
-    tableBody.innerHTML = '';
-    
-    if (data.length === 0) {
-      tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 20px;">Kategori tidak ditemukan.</td></tr>`;
-      return;
-    }
-  
-    data.forEach((item, index) => {
-      const row = document.createElement('tr');
-      row.innerHTML = `
-        <td>${index + 1}</td>
-        <td>
-          <div class="badge-icon">
-            <iconify-icon icon="${item.icon}"></iconify-icon>
-          </div>
-        </td>
-        <td><strong>${item.nama}</strong></td>
-        <td>${item.deskripsi}</td>
-        <td><span class="badge-count">${item.jumlahItem || 0} Item</span></td>
-        <td>
-          <button class="btn btn-edit" onclick="editKategori(${item.id})">Edit</button>
-          <button class="btn btn-danger" onclick="hapusKategori(${item.id})">Hapus</button>
-        </td>
-      `;
-      tableBody.appendChild(row);
-    });
+const API_BASE_URL = window.BASE_URL || window.location.origin;
+
+let dataKategori = [];
+
+const tableBody     = document.getElementById('kategori-table-body');
+const searchInput   = document.getElementById('search-input');
+const modal         = document.getElementById('kategori-modal');
+const modalTitle    = document.getElementById('modal-title');
+const form          = document.getElementById('kategori-form');
+const btnTambah     = document.getElementById('btn-tambah');
+const btnCloseModal = document.getElementById('btn-close-modal');
+const btnBatal      = document.getElementById('btn-batal');
+
+// ─── Fetch dari API ────────────────────────────────────────────────────────────
+async function loadKategori() {
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/kategori.php`, { credentials: 'include' });
+    const json = await res.json();
+    if (!json.status || !Array.isArray(json.data)) throw new Error(json.message || 'Gagal memuat kategori');
+    dataKategori = json.data;
+    renderTable(dataKategori);
+  } catch (err) {
+    if (tableBody) tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:red;padding:20px;">${err.message}</td></tr>`;
   }
-  
-  // Simpan data ke LocalStorage
-  function saveData() {
-    localStorage.setItem('adminKategoriData', JSON.stringify(dataKategori));
-    renderTable();
+}
+
+// ─── Render Tabel ──────────────────────────────────────────────────────────────
+function renderTable(data) {
+  if (!tableBody) return;
+  tableBody.innerHTML = '';
+
+  if (!data || data.length === 0) {
+    tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:20px;">Kategori tidak ditemukan.</td></tr>`;
+    return;
   }
-  
-  // Modal Toggle
-  btnTambah.addEventListener('click', () => {
-    form.reset();
-    document.getElementById('kategori-id').value = '';
-    modalTitle.textContent = "Tambah Kategori Baru";
-    modal.classList.remove('hidden');
+
+  data.forEach((item, index) => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${index + 1}</td>
+      <td><strong>${escapeHtml(item.nama_kategori || item.nama || '-')}</strong></td>
+      <td>
+        <button class="btn btn-edit" data-id="${item.id_kategori}">Edit</button>
+        <button class="btn btn-danger" data-id="${item.id_kategori}">Hapus</button>
+      </td>
+    `;
+    tableBody.appendChild(row);
   });
-  
-  function closeModal() {
-    modal.classList.add('hidden');
-  }
-  
-  btnCloseModal.addEventListener('click', closeModal);
-  btnBatal.addEventListener('click', closeModal);
-  
-  // Submit Form (Tambah / Edit)
-  form.addEventListener('submit', (e) => {
+
+  // Event listener edit & hapus
+  tableBody.querySelectorAll('.btn-edit').forEach(btn => {
+    btn.addEventListener('click', () => editKategori(btn.dataset.id));
+  });
+  tableBody.querySelectorAll('.btn-danger').forEach(btn => {
+    btn.addEventListener('click', () => hapusKategori(btn.dataset.id));
+  });
+}
+
+function escapeHtml(str) {
+  return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+// ─── Modal ─────────────────────────────────────────────────────────────────────
+function openModal(title = 'Tambah Kategori Baru', id = '', nama = '') {
+  if (form) form.reset();
+  const idInput = document.getElementById('kategori-id');
+  const namaInput = document.getElementById('nama-kategori');
+  if (idInput) idInput.value = id;
+  if (namaInput) namaInput.value = nama;
+  if (modalTitle) modalTitle.textContent = title;
+  if (modal) modal.classList.remove('hidden');
+}
+
+function closeModal() {
+  if (modal) modal.classList.add('hidden');
+}
+
+if (btnTambah) btnTambah.addEventListener('click', () => openModal());
+if (btnCloseModal) btnCloseModal.addEventListener('click', closeModal);
+if (btnBatal) btnBatal.addEventListener('click', closeModal);
+
+// ─── Submit Form (Tambah / Edit) ──────────────────────────────────────────────
+if (form) {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
-  
-    const id = document.getElementById('kategori-id').value;
-    const nama = document.getElementById('nama-kategori').value;
-    const icon = document.getElementById('icon-kategori').value;
-    const deskripsi = document.getElementById('deskripsi-kategori').value;
-  
-    if (id) {
-      // Edit Kategori
-      const index = dataKategori.findIndex(k => k.id == id);
-      if (index !== -1) {
-        dataKategori[index] = { ...dataKategori[index], nama, icon, deskripsi };
-      }
-    } else {
-      // Tambah Kategori Baru
-      const newKategori = {
-        id: Date.now(),
-        nama,
-        icon,
-        deskripsi,
-        jumlahItem: 0
-      };
-      dataKategori.push(newKategori);
+    const id   = document.getElementById('kategori-id')?.value;
+    const nama = document.getElementById('nama-kategori')?.value?.trim();
+    if (!nama) return;
+
+    try {
+      const method = id ? 'PUT' : 'POST';
+      const url    = id
+        ? `${API_BASE_URL}/api/kategori.php?id=${encodeURIComponent(id)}`
+        : `${API_BASE_URL}/api/kategori.php`;
+
+      const res = await fetch(url, {
+        method,
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nama_kategori: nama }),
+      });
+      const json = await res.json();
+      if (!json.status) throw new Error(json.message || 'Gagal menyimpan');
+      closeModal();
+      await loadKategori();
+    } catch (err) {
+      alert(err.message);
     }
-  
-    saveData();
-    closeModal();
   });
-  
-  // Edit Kategori
-  window.editKategori = function(id) {
-    const item = dataKategori.find(k => k.id === id);
-    if (item) {
-      document.getElementById('kategori-id').value = item.id;
-      document.getElementById('nama-kategori').value = item.nama;
-      document.getElementById('icon-kategori').value = item.icon;
-      document.getElementById('deskripsi-kategori').value = item.deskripsi;
-  
-      modalTitle.textContent = "Edit Kategori Kuliner";
-      modal.classList.remove('hidden');
-    }
-  };
-  
-  // Hapus Kategori
-  window.hapusKategori = function(id) {
-    if (confirm("Apakah Anda yakin ingin menghapus kategori ini?")) {
-      dataKategori = dataKategori.filter(item => item.id !== id);
-      saveData();
-    }
-  };
-  
-  // Fitur Pencarian Real-time
+}
+
+// ─── Edit ──────────────────────────────────────────────────────────────────────
+function editKategori(id) {
+  const item = dataKategori.find(k => String(k.id_kategori) === String(id));
+  if (item) openModal('Edit Kategori Kuliner', item.id_kategori, item.nama_kategori || item.nama || '');
+}
+
+// ─── Hapus ─────────────────────────────────────────────────────────────────────
+async function hapusKategori(id) {
+  if (!confirm('Apakah Anda yakin ingin menghapus kategori ini?')) return;
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/kategori.php?id=${encodeURIComponent(id)}`, {
+      method: 'DELETE',
+      credentials: 'include',
+    });
+    const json = await res.json();
+    if (!json.status) throw new Error(json.message || 'Gagal menghapus');
+    await loadKategori();
+  } catch (err) {
+    alert(err.message);
+  }
+}
+
+// ─── Pencarian ─────────────────────────────────────────────────────────────────
+if (searchInput) {
   searchInput.addEventListener('input', (e) => {
     const keyword = e.target.value.toLowerCase();
-    const filtered = dataKategori.filter(item => 
-      item.nama.toLowerCase().includes(keyword) || 
-      item.deskripsi.toLowerCase().includes(keyword)
+    const filtered = dataKategori.filter(item =>
+      (item.nama_kategori || item.nama || '').toLowerCase().includes(keyword)
     );
     renderTable(filtered);
   });
-  
-  // Load awal
-  renderTable();
+}
+
+// ─── Init ──────────────────────────────────────────────────────────────────────
+loadKategori();
